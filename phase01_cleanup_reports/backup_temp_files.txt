@@ -1,0 +1,7 @@
+./surhan_scanner/agent_api.py.bak_table_attach_20260615_013848
+./surhan_scanner/public/js/surhan_scanner.js.bak_20260616_041617
+./surhan_scanner/public/js/surhan_scanner.js.bak_lock_scan_options_20260615_003712
+./surhan_scanner/public/js/surhan_scanner.js.bak_no_barcode_dialog_20260615_001919
+./surhan_scanner/public/js/surhan_scanner.js.bak_no_barcode_dialog_20260615_001943
+./surhan_scanner/public/js/surhan_scanner.js.bak_remove_barcode_ui_20260615_015229
+./surhan_scanner/public/js/surhan_scanner.js.bak_ui_fix_20260615_020017
