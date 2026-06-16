@@ -1,0 +1,20 @@
+=== Hooks / Assets Runtime Check ===
+
+=== hooks.py includes ===
+28:app_include_css = [
+32:app_include_js = [
+37:# app_include_css = "/assets/surhan_scanner/css/surhan_scanner.css"
+38:# app_include_js = "/assets/surhan_scanner/js/surhan_scanner.js"
+55:doctype_js = {
+59:# doctype_js = {"doctype" : "public/js/doctype.js"}
+102:after_install = "surhan_scanner.install.after_install"
+159:# scheduler_events = {
+266:scheduler_events = {
+
+=== Public assets existence ===
+OK: surhan_scanner/public/css/surhan_scanner.css
+OK: surhan_scanner/public/js/surhan_scanner.js
+OK: surhan_scanner/public/js/doctype/surhan_scanner_rule.js
+OK: surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.2.zip
+OK: surhan_scanner/public/agent/version.json
+OK: surhan_scanner/public/agent/update_manifest.json

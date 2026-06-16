@@ -1,0 +1,26 @@
+=== Phase 12 Bundle Verification ===
+
+=== Bundle files ===
+-rw-rw-r-- 1 frappe frappe 25M Jun 16 07:42 /home/frappe/surhan_scanner_hardening_final_20260616_074213.bundle
+-rw-rw-r-- 1 frappe frappe 25M Jun 16 07:44 /home/frappe/surhan_scanner_hardening_final_20260616_074410.bundle
+
+=== Git bundle verify ===
+The bundle contains these 16 refs:
+b5c7d82f17235deedac28a30557bb40366fffa22 refs/heads/hardening/phase-01-cleanup
+9f98840f48ba6d7be6f5c9aec81695151ef73da8 refs/heads/hardening/phase-02-python-fatal-fixes
+38a7be5d110cfcaa9955a15672da920b206463db refs/heads/hardening/phase-03-api-decorators
+4f61fe2aa8bd58e22b91203b316d965bb45a9bbc refs/heads/hardening/phase-04-attachments-child-table
+35a3e0da410fc7e89e23c47922aae6f89c23a8f3 refs/heads/hardening/phase-05-security-permissions
+e0bbf52716f78bcadafeb6ac2ca54e88e65ac3ab refs/heads/hardening/phase-06-agent-version
+6142bfb401f5b64dabfcc4c417a281aafedeb74c refs/heads/hardening/phase-07-agent-release-policy
+b957eeb85e8bcdfeb728789ccff8697851a7f0c4 refs/heads/hardening/phase-08-public-js-backups
+ffa1e66136f8250d34cb0c13e8ac9ab1094c853d refs/heads/hardening/phase-09-hooks-build-assets
+76003ac77c25cd798f266fc50d4b5301a2b16920 refs/heads/hardening/phase-10-doctypes-migrations
+b719b1b748c997f670ee75c7cd2568aedd0f56f8 refs/heads/hardening/phase-11-final-release-report
+a49ba9b3c1c967d057a1edc745e9564ff95caf88 refs/heads/master
+883ca90a235ceb6a06bbe91d4981dc5e4d4a8ec5 refs/tags/backup-before-hardening-merge-20260616_073651
+b719b1b748c997f670ee75c7cd2568aedd0f56f8 refs/tags/hardening-complete-phase-11-20260616_073651
+a49ba9b3c1c967d057a1edc745e9564ff95caf88 refs/tags/hardening-post-merge-verified-20260616_074119
+a49ba9b3c1c967d057a1edc745e9564ff95caf88 HEAD
+The bundle records a complete history.
+The bundle uses this hash algorithm: sha1
