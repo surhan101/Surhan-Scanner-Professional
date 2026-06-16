@@ -1491,6 +1491,9 @@ def get_agent_update_manifest(
         _enforce_scanner_role(frappe.session.user)
         authenticated_for_device_update = True
 
+    else:
+        return _response(403, False, "scan_token is required for guest update check")
+
     manifest = _read_agent_update_manifest()
     latest_version = manifest.get("latest_version")
     current_version = _safe_agent_text(current_version or "0.0.0", 50)

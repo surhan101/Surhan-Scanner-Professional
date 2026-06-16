@@ -1,0 +1,24 @@
+=== Phase 05 Security / Permissions Audit ===
+
+=== allow_guest endpoints ===
+agent_heartbeat: line=1634 decorators=frappe.whitelist(allow_guest=True)
+get_agent_update_manifest: line=1457 decorators=frappe.whitelist(allow_guest=True)
+report_agent_update_status: line=1572 decorators=frappe.whitelist(allow_guest=True)
+upload_agent_scan: line=2421 decorators=frappe.whitelist(allow_guest=True)
+
+=== login-required endpoints ===
+create_scan_session: line=2036 decorators=frappe.whitelist()
+create_scan_session_history: line=2750 decorators=frappe.whitelist()
+download_s3_scan_file: line=1428 decorators=frappe.whitelist()
+get_agent_dashboard_data: line=1817 decorators=frappe.whitelist()
+get_agent_device_detail: line=2015 decorators=frappe.whitelist()
+get_agent_monitoring_status: line=1745 decorators=frappe.whitelist()
+mark_stale_agents_offline: line=1804 decorators=frappe.whitelist()
+set_agent_device_status: line=1974 decorators=frappe.whitelist()
+
+=== helper exposure checks ===
+OK: no _secured function
+OK: no stale require_scanner_access wrapper detected
+
+=== result ===
+PASSED
