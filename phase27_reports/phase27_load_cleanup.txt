@@ -1,0 +1,13 @@
+=== Cleanup Count ===
+375
+
+=== Final Remaining ===
+{
+  "targets": [],
+  "rules": [],
+  "logs": [],
+  "files": [],
+  "disk_files": []
+}
+
+final_cleanup_ok=True
