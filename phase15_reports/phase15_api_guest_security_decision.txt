@@ -1,0 +1,119 @@
+=== Phase 15 API Guest Security Decision ===
+
+=== Static allow_guest Audit ===
+=== Whitelisted Functions ===
+download_s3_scan_file: frappe.whitelist()
+get_agent_update_manifest: frappe.whitelist(allow_guest=True)
+report_agent_update_status: frappe.whitelist(allow_guest=True)
+agent_heartbeat: frappe.whitelist(allow_guest=True)
+get_agent_monitoring_status: frappe.whitelist()
+mark_stale_agents_offline: frappe.whitelist()
+get_agent_dashboard_data: frappe.whitelist()
+set_agent_device_status: frappe.whitelist()
+get_agent_device_detail: frappe.whitelist()
+create_scan_session: frappe.whitelist()
+upload_agent_scan: frappe.whitelist(allow_guest=True)
+create_scan_session_history: frappe.whitelist()
+
+=== allow_guest=True Functions ===
+get_agent_update_manifest: frappe.whitelist(allow_guest=True)
+report_agent_update_status: frappe.whitelist(allow_guest=True)
+agent_heartbeat: frappe.whitelist(allow_guest=True)
+upload_agent_scan: frappe.whitelist(allow_guest=True)
+
+=== Expected Guest Functions ===
+expected: ['agent_heartbeat', 'get_agent_update_manifest', 'report_agent_update_status', 'upload_agent_scan']
+actual: ['agent_heartbeat', 'get_agent_update_manifest', 'report_agent_update_status', 'upload_agent_scan']
+
+=== Result ===
+PASSED
+
+=== Bench Execute Negative Checks ===
+=== Guest Security Negative Checks ===
+
+=== get_agent_update_manifest without args ===
+{"success": true, "product": "Surhan Scanner Agent", "channel": "stable", "latest_version": "1.0.2", "minimum_supported_version": "1.0.0", "mandatory": false, "package_filename": "SurhanScannerAgent-v1.0.2.zip", "package_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip", "package_sha256": "5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200", "package_size_bytes": 6046084, "hash_algorithm": "sha256", "archive_format": "zip", "installer_type": "runtime_zip", "requires_admin": false, "release_date": "2026-06-14T23:30:00+03:00", "code_signing": {"required": false, "status": "not_signed"}, "notes": ["Surhan Scanner Agent Enterprise 1.0.2", "Runtime ZIP package", "Deployment mode: user_startup_watchdog", "Does not include Windows Service installer"], "deployment_mode": "user_startup_watchdog", "package_type": "runtime_zip", "windows_service_installer": false, "current_version": "0.0.0", "update_available": true, "status": "Available", "security": {"must_verify_sha256": true, "hash_algorithm": "sha256", "expected_sha256": "5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200", "code_signing_required": false}}
+
+=== report_agent_update_status without args ===
+{"success": false, "message": "Invalid update status"}
+
+=== agent_heartbeat without args ===
+{"success": true, "message": "Agent heartbeat received", "agent": {"name": "AGENT-678c78c9c7f35191", "agent_id": "AGENT-678c78c9c7f35191", "machine_name": "", "windows_user": "", "ip_address": "unknown", "status": "Online", "last_seen": "2026-06-16 07:55:01.912284", "agent_version": null, "scanner_name": null, "total_heartbeats": 1}}
+
+=== upload_agent_scan without args ===
+{"success": false, "message": "scan_token is required"}
+
+=== HTTP Guest Security Probe ===
+=== HTTP Guest Security Probe ===
+BASE=http://127.0.0.1:8000
+
+=== GET manifest no args ===
+HTTP/1.1 200 OK
+Server: gunicorn
+Date: Tue, 16 Jun 2026 04:56:56 GMT
+Connection: close
+Content-Type: application/json
+Content-Length: 1123
+Cache-Control: no-store,no-cache,must-revalidate,max-age=0
+Set-Cookie: sid=Guest; Expires=Tue, 23 Jun 2026 06:56:56 GMT; Max-Age=612000; HttpOnly; Path=/; SameSite=Lax
+Set-Cookie: system_user=no; Path=/; SameSite=Lax
+Set-Cookie: full_name=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_id=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_lang=en; Path=/; SameSite=Lax
+
+{"message":{"success":true,"product":"Surhan Scanner Agent","channel":"stable","latest_version":"1.0.2","minimum_supported_version":"1.0.0","mandatory":false,"package_filename":"SurhanScannerAgent-v1.0.2.zip","package_url":"/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip","package_sha256":"5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200","package_size_bytes":6046084,"hash_algorithm":"sha256","archive_format":"zip","installer_type":"runtime_zip","requires_admin":false,"release_date":"2026-06-14T23:30:00+03:00","code_signing":{"required":false,"status":"not_signed"},"notes":["Surhan Scanner Agent Enterprise 1.0.2","Runtime ZIP package","Deployment mode: user_startup_watchdog","Does not include Windows Service installer"],"deployment_mode":"user_startup_watchdog","package_type":"runtime_zip","windows_service_installer":false,"current_version":"0.0.0","update_available":true,"status":"Available","security":{"must_verify_sha256":true,"hash_algorithm":"sha256","expected_sha256":"5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200","code_signing_required":false}}}
+=== POST report_agent_update_status empty JSON ===
+HTTP/1.1 400 BAD REQUEST
+Server: gunicorn
+Date: Tue, 16 Jun 2026 04:56:56 GMT
+Connection: close
+Content-Type: application/json
+Content-Length: 63
+Cache-Control: no-store,no-cache,must-revalidate,max-age=0
+Set-Cookie: sid=Guest; Expires=Tue, 23 Jun 2026 06:56:56 GMT; Max-Age=612000; HttpOnly; Path=/; SameSite=Lax
+Set-Cookie: system_user=no; Path=/; SameSite=Lax
+Set-Cookie: full_name=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_id=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_lang=en; Path=/; SameSite=Lax
+
+{"message":{"success":false,"message":"Invalid update status"}}
+=== POST agent_heartbeat empty JSON ===
+HTTP/1.1 403 FORBIDDEN
+Server: gunicorn
+Date: Tue, 16 Jun 2026 04:56:56 GMT
+Connection: close
+Content-Type: application/json
+Content-Length: 84
+Cache-Control: no-store,no-cache,must-revalidate,max-age=0
+WWW-Authenticate: Bearer resource_metadata="http://ysmo/.well-known/oauth-protected-resource"
+Set-Cookie: sid=Guest; Expires=Tue, 23 Jun 2026 06:56:56 GMT; Max-Age=612000; HttpOnly; Path=/; SameSite=Lax
+Set-Cookie: system_user=no; Path=/; SameSite=Lax
+Set-Cookie: full_name=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_id=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_lang=en; Path=/; SameSite=Lax
+
+{"message":{"success":false,"message":"scan_token is required for guest heartbeat"}}
+=== POST upload_agent_scan empty JSON ===
+HTTP/1.1 500 INTERNAL SERVER ERROR
+Server: gunicorn
+Date: Tue, 16 Jun 2026 04:56:56 GMT
+Connection: close
+Content-Type: application/json
+Content-Length: 24
+Cache-Control: no-store,no-cache,must-revalidate,max-age=0
+Set-Cookie: sid=Guest; Expires=Tue, 23 Jun 2026 06:56:56 GMT; Max-Age=612000; HttpOnly; Path=/; SameSite=Lax
+Set-Cookie: system_user=no; Path=/; SameSite=Lax
+Set-Cookie: full_name=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_id=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_lang=en; Path=/; SameSite=Lax
+
+{"exc_type":"NameError"}
+
+=== Anonymous Agent Records ===
+=== Empty / Anonymous Agent Records Check ===
+
+[{"name": "AGENT-678c78c9c7f35191", "agent_id": "AGENT-678c78c9c7f35191", "machine_name": "", "windows_user": "", "ip_address": "unknown", "status": "Online", "last_seen": "2026-06-16 07:55:01.912284"}, {"name": "AGENT-TEST-001-019", "agent_id": "AGENT-TEST-001-019", "machine_name": "SURHAN-PC-01-019", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:04.403076"}, {"name": "AGENT-TEST-001-017", "agent_id": "AGENT-TEST-001-017", "machine_name": "SURHAN-PC-01-017", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.660107"}, {"name": "AGENT-TEST-001-014", "agent_id": "AGENT-TEST-001-014", "machine_name": "SURHAN-PC-01-014", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.556848"}, {"name": "AGENT-TEST-001-012", "agent_id": "AGENT-TEST-001-012", "machine_name": "SURHAN-PC-01-012", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.596135"}, {"name": "AGENT-TEST-001-011", "agent_id": "AGENT-TEST-001-011", "machine_name": "SURHAN-PC-01-011", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.724735"}, {"name": "AGENT-TEST-001-015", "agent_id": "AGENT-TEST-001-015", "machine_name": "SURHAN-PC-01-015", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.753094"}, {"name": "AGENT-TEST-001-010", "agent_id": "AGENT-TEST-001-010", "machine_name": "SURHAN-PC-01-010", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.569000"}, {"name": "AGENT-TEST-001-013", "agent_id": "AGENT-TEST-001-013", "machine_name": "SURHAN-PC-01-013", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.681098"}, {"name": "AGENT-TEST-001-016", "agent_id": "AGENT-TEST-001-016", "machine_name": "SURHAN-PC-01-016", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.798642"}, {"name": "AGENT-TEST-001-018", "agent_id": "AGENT-TEST-001-018", "machine_name": "SURHAN-PC-01-018", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:04.305677"}, {"name": "AGENT-TEST-001-009", "agent_id": "AGENT-TEST-001-009", "machine_name": "SURHAN-PC-01-009", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:03.523536"}, {"name": "AGENT-TEST-001-001", "agent_id": "AGENT-TEST-001-001", "machine_name": "SURHAN-PC-01-001", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.268897"}, {"name": "AGENT-TEST-001-000", "agent_id": "AGENT-TEST-001-000", "machine_name": "SURHAN-PC-01-000", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.261522"}, {"name": "AGENT-TEST-001-006", "agent_id": "AGENT-TEST-001-006", "machine_name": "SURHAN-PC-01-006", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.187854"}, {"name": "AGENT-TEST-001-004", "agent_id": "AGENT-TEST-001-004", "machine_name": "SURHAN-PC-01-004", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.069649"}, {"name": "AGENT-TEST-001-007", "agent_id": "AGENT-TEST-001-007", "machine_name": "SURHAN-PC-01-007", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.179995"}, {"name": "AGENT-TEST-001-005", "agent_id": "AGENT-TEST-001-005", "machine_name": "SURHAN-PC-01-005", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.275967"}, {"name": "AGENT-TEST-001-003", "agent_id": "AGENT-TEST-001-003", "machine_name": "SURHAN-PC-01-003", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.324776"}, {"name": "AGENT-TEST-001-002", "agent_id": "AGENT-TEST-001-002", "machine_name": "SURHAN-PC-01-002", "windows_user": "surhan", "ip_address": "127.0.0.1", "status": "Offline", "last_seen": "2026-06-13 03:36:02.296545"}]
+
+=== Decision ===
+REVIEW_REQUIRED
+Reason: agent_heartbeat accepts empty guest-like input and may create anonymous Agent records.
