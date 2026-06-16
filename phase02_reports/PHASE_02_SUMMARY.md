@@ -6,11 +6,11 @@
 ## ما تم تنفيذه
 - إصلاح SyntaxError الناتج عن وجود @frappe.whitelist داخل توقيع دالة.
 - إصلاح IndentationError في create_scan_session_history.
-- حذف دوال _secured المكررة أو غير الصحيحة من مواضعها.
-- قص الأكواد القديمة والمجمدة قبل بداية الملف الحقيقية.
+- حذف دوال _secured المكررة وغير الصحيحة.
+- حذف الأكواد القديمة والمجمدة من بداية agent_api.py.
 - إصلاح wrapper الخاص بـ upload_agent_scan.
 - إصلاح منطق Child Table بحيث لا يعامل Table كحقل Attach مباشر.
-- نقل النسخ القديمة والمجمدة خارج مجلد الكود.
+- إزالة نسخة agent_api.py.bak_table_attach_20260615_013848 من مجلد الكود.
 - التأكد من نجاح py_compile على agent_api.py.
 - التأكد من نجاح py_compile على جميع ملفات Python داخل التطبيق.
 
