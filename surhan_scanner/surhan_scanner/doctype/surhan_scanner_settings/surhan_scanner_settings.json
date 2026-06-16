@@ -1,0 +1,378 @@
+{
+ "actions": [],
+ "creation": "2026-05-19 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "license_key",
+  "dialog_title",
+  "default_file_type",
+  "default_resolution",
+  "default_pixel_type",
+  "is_private",
+  "folder",
+  "button_label",
+  "button_group",
+  "show_debug_button",
+  "auto_reload_after_upload",
+  "filename_template",
+  "show_scanner_ui",
+  "agent_settings_section",
+  "scanner_engine",
+  "agent_url",
+  "agent_token_expiry_seconds",
+  "agent_scan_timeout_seconds",
+  "agent_max_file_size_mb",
+  "agent_allowed_file_types",
+  "enable_agent_health_check",
+  "agent_download_url",
+  "agent_latest_version",
+  "agent_version_check_url",
+  "show_agent_install_dialog",
+  "agent_install_mode",
+  "agent_install_path",
+  "agent_spool_path",
+  "agent_log_path",
+  "enable_silent_scan",
+  "enable_scan_queue",
+  "max_concurrent_scans_per_agent",
+  "enable_upload_retry",
+  "upload_retry_count",
+  "upload_retry_delay_seconds",
+  "max_scan_batch_pages",
+  "max_upload_size_mb",
+  "storage_section",
+  "scanner_storage_backend",
+  "s3_endpoint_url",
+  "s3_region_name",
+  "s3_bucket",
+  "s3_access_key_id",
+  "s3_secret_access_key",
+  "s3_key_prefix",
+  "s3_force_path_style",
+  "s3_presigned_expiry_seconds"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "license_key",
+   "fieldtype": "Password",
+   "label": "Dynamsoft License Key"
+  },
+  {
+   "default": "ماسح المستندات Document Scanner",
+   "fieldname": "dialog_title",
+   "fieldtype": "Data",
+   "label": "Dialog Title"
+  },
+  {
+   "default": "PDF",
+   "fieldname": "default_file_type",
+   "fieldtype": "Select",
+   "label": "Default File Type",
+   "options": "PDF\nJPG"
+  },
+  {
+   "default": "200",
+   "fieldname": "default_resolution",
+   "fieldtype": "Int",
+   "label": "Default Resolution"
+  },
+  {
+   "default": "Color",
+   "fieldname": "default_pixel_type",
+   "fieldtype": "Select",
+   "label": "Default Pixel Type",
+   "options": "Black & White\nGray\nColor"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_private",
+   "fieldtype": "Check",
+   "label": "Is Private File"
+  },
+  {
+   "default": "Home/Attachments",
+   "fieldname": "folder",
+   "fieldtype": "Data",
+   "label": "Folder"
+  },
+  {
+   "default": "اسكانر",
+   "fieldname": "button_label",
+   "fieldtype": "Data",
+   "label": "Default Button Label"
+  },
+  {
+   "default": "مرفقات",
+   "fieldname": "button_group",
+   "fieldtype": "Data",
+   "label": "Default Button Group"
+  },
+  {
+   "default": "1",
+   "fieldname": "show_debug_button",
+   "fieldtype": "Check",
+   "label": "Show Debug Button"
+  },
+  {
+   "default": "1",
+   "fieldname": "auto_reload_after_upload",
+   "fieldtype": "Check",
+   "label": "Auto Reload After Upload"
+  },
+  {
+   "default": "scan_{doctype}_{docname}_{timestamp}",
+   "fieldname": "filename_template",
+   "fieldtype": "Data",
+   "label": "Filename Template"
+  },
+  {
+   "default": "1",
+   "fieldname": "show_scanner_ui",
+   "fieldtype": "Check",
+   "label": "Show Scanner UI"
+  },
+  {
+   "fieldname": "agent_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Agent Settings"
+  },
+  {
+   "fieldname": "scanner_engine",
+   "fieldtype": "Select",
+   "label": "Scanner Engine",
+   "options": "\nDynamsoft\nSurhan Agent"
+  },
+  {
+   "default": "http://127.0.0.1:8787",
+   "fieldname": "agent_url",
+   "fieldtype": "Data",
+   "label": "Agent URL"
+  },
+  {
+   "default": "300",
+   "fieldname": "agent_token_expiry_seconds",
+   "fieldtype": "Int",
+   "label": "Agent Token Expiry Seconds"
+  },
+  {
+   "default": "120",
+   "fieldname": "agent_scan_timeout_seconds",
+   "fieldtype": "Int",
+   "label": "Agent Scan Timeout Seconds"
+  },
+  {
+   "default": "200",
+   "fieldname": "agent_max_file_size_mb",
+   "fieldtype": "Int",
+   "label": "Agent Max File Size MB"
+  },
+  {
+   "default": "pdf,jpg,jpeg,png,tif,tiff",
+   "fieldname": "agent_allowed_file_types",
+   "fieldtype": "Data",
+   "label": "Agent Allowed File Types"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_agent_health_check",
+   "fieldtype": "Check",
+   "label": "Enable Agent Health Check"
+  },
+  {
+   "default": "/assets/surhan_scanner/agent/SurhanScannerAgentSetup.exe",
+   "fieldname": "agent_download_url",
+   "fieldtype": "Data",
+   "label": "Agent Download URL"
+  },
+  {
+   "default": "0.1.0",
+   "fieldname": "agent_latest_version",
+   "fieldtype": "Data",
+   "label": "Agent Latest Version"
+  },
+  {
+   "default": "/assets/surhan_scanner/agent/version.json",
+   "fieldname": "agent_version_check_url",
+   "fieldtype": "Data",
+   "label": "Agent Version Check URL"
+  },
+  {
+   "default": "1",
+   "fieldname": "show_agent_install_dialog",
+   "fieldtype": "Check",
+   "label": "Show Agent Install Dialog"
+  },
+  {
+   "fieldname": "agent_install_mode",
+   "fieldtype": "Select",
+   "label": "Agent Install Mode",
+   "options": "\nUser Startup\nWindows Service\nScheduled Task\nPortable\nDisabled"
+  },
+  {
+   "default": "C:\\Program Files\\Surhan Scanner Agent",
+   "fieldname": "agent_install_path",
+   "fieldtype": "Data",
+   "label": "Agent Install Path"
+  },
+  {
+   "default": "C:\\ProgramData\\SurhanScannerAgent\\spool",
+   "fieldname": "agent_spool_path",
+   "fieldtype": "Data",
+   "label": "Agent Spool Path"
+  },
+  {
+   "default": "C:\\ProgramData\\SurhanScannerAgent\\logs",
+   "fieldname": "agent_log_path",
+   "fieldtype": "Data",
+   "label": "Agent Log Path"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_silent_scan",
+   "fieldtype": "Check",
+   "label": "Enable Silent Scan"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_scan_queue",
+   "fieldtype": "Check",
+   "label": "Enable Scan Queue"
+  },
+  {
+   "default": "1",
+   "fieldname": "max_concurrent_scans_per_agent",
+   "fieldtype": "Int",
+   "label": "Max Concurrent Scans Per Agent"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_upload_retry",
+   "fieldtype": "Check",
+   "label": "Enable Upload Retry"
+  },
+  {
+   "default": "3",
+   "fieldname": "upload_retry_count",
+   "fieldtype": "Int",
+   "label": "Upload Retry Count"
+  },
+  {
+   "default": "5",
+   "fieldname": "upload_retry_delay_seconds",
+   "fieldtype": "Int",
+   "label": "Upload Retry Delay Seconds"
+  },
+  {
+   "default": "1000",
+   "fieldname": "max_scan_batch_pages",
+   "fieldtype": "Int",
+   "label": "Max Scan Batch Pages"
+  },
+  {
+   "default": "200",
+   "fieldname": "max_upload_size_mb",
+   "fieldtype": "Int",
+   "label": "Max Upload Size MB"
+  },
+  {
+   "fieldname": "storage_section",
+   "fieldtype": "Section Break",
+   "label": "Storage"
+  },
+  {
+   "default": "Local",
+   "fieldname": "scanner_storage_backend",
+   "fieldtype": "Select",
+   "label": "Scanner Storage Backend",
+   "options": "Local\nS3/MinIO"
+  },
+  {
+   "description": "Example: http://127.0.0.1:9000 or https://s3.amazonaws.com",
+   "fieldname": "s3_endpoint_url",
+   "fieldtype": "Data",
+   "label": "S3 Endpoint URL"
+  },
+  {
+   "default": "us-east-1",
+   "fieldname": "s3_region_name",
+   "fieldtype": "Data",
+   "label": "S3 Region Name"
+  },
+  {
+   "fieldname": "s3_bucket",
+   "fieldtype": "Data",
+   "label": "S3 Bucket"
+  },
+  {
+   "fieldname": "s3_access_key_id",
+   "fieldtype": "Data",
+   "label": "S3 Access Key ID"
+  },
+  {
+   "fieldname": "s3_secret_access_key",
+   "fieldtype": "Password",
+   "label": "S3 Secret Access Key"
+  },
+  {
+   "default": "surhan-scanner",
+   "fieldname": "s3_key_prefix",
+   "fieldtype": "Data",
+   "label": "S3 Key Prefix"
+  },
+  {
+   "default": "1",
+   "description": "Enable this for MinIO.",
+   "fieldname": "s3_force_path_style",
+   "fieldtype": "Check",
+   "label": "S3 Force Path Style"
+  },
+  {
+   "default": "300",
+   "fieldname": "s3_presigned_expiry_seconds",
+   "fieldtype": "Int",
+   "label": "S3 Presigned URL Expiry Seconds"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-06-14 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Surhan Scanner",
+ "name": "Surhan Scanner Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "role": "Surhan Scanner Admin",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

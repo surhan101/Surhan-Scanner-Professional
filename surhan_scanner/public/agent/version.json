@@ -1,0 +1,11 @@
+﻿{
+  "product": "Surhan Scanner Agent",
+  "version": "1.0.2",
+  "latest_version": "1.0.2",
+  "channel": "stable",
+  "download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip",
+  "sha256": "5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200",
+  "size_bytes": 6046084,
+  "mandatory": false,
+  "generated_at": "2026-06-13T01:46:07.4537109Z"
+}

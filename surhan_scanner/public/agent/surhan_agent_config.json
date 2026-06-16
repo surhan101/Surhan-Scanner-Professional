@@ -1,0 +1,62 @@
+{
+  "host": "127.0.0.1",
+  "port": 8787,
+  "allowed_origins": [
+    "http://192.168.71.128",
+    "http://192.168.111.81",
+    "http://localhost",
+    "http://127.0.0.1"
+  ],
+  "show_scanner_ui": true,
+  "always_select_device": false,
+  "scan_timeout_seconds": 180,
+  "work_dir": "",
+  "default_output_type": "pdf",
+  "version": "1.0.0",
+  "edition": "Enterprise",
+  "scanner": {
+    "default_file_type": "pdf"
+  },
+  "upload": {
+    "strategy": "direct",
+    "max_upload_size_mb": 25,
+    "allowed_file_types": [
+      "pdf",
+      "jpg",
+      "jpeg",
+      "png",
+      "tif",
+      "tiff"
+    ],
+    "resume_upload_enabled": false,
+    "chunked_upload_enabled": false,
+    "chunk_size_mb": 10
+  },
+  "security": {
+    "require_scan_token": true,
+    "allow_guest_upload": false,
+    "bind_token_to_user": true,
+    "bind_token_to_doctype_docname": true,
+    "reject_expired_token": true,
+    "reject_unknown_file_type": true,
+    "reject_oversized_file": true,
+    "require_trusted_origin": true,
+    "allowed_upload_method_path": "/api/method/surhan_scanner.agent_api.upload_agent_scan"
+  },
+  "enterprise": {
+    "deployment_mode": "user_startup",
+    "minimum_farabi_app_version": "1.0.0",
+    "required_agent_version": "1.0.0",
+    "compatible_agent_versions": [
+      "1.0.0"
+    ]
+  },
+  "server": {
+    "allowed_farabi_origins": [
+      "http://ysmo",
+      "http://192.168.71.128",
+      "http://10.100.4.2",
+      "http://10.100.4.2:8000"
+    ]
+  }
+}

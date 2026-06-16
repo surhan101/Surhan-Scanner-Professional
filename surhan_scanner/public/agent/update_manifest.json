@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "product": "Surhan Scanner Agent",
+  "channel": "stable",
+  "latest_version": "1.0.0",
+  "minimum_supported_version": "1.0.0",
+  "mandatory": false,
+  "package_filename": "SurhanScannerAgentSetup-1.0.0.exe",
+  "package_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe",
+  "package_sha256": "6792B3644E457AB031C234E3405E9D7D8AD7E22C2BA230A946F14DE568C71F1D",
+  "package_size_bytes": 4431416,
+  "hash_algorithm": "sha256",
+  "archive_format": "exe",
+  "installer_type": "inno_setup",
+  "requires_admin": true,
+  "release_date": "2026-06-14T23:30:00+03:00",
+  "code_signing": {
+    "required": false,
+    "status": "not_signed"
+  },
+  "notes": [
+    "Surhan Scanner Agent Enterprise 1.0.0",
+    "Installs Windows Service",
+    "Enables diagnostics, upload retry, spool replay and service recovery"
+  ]
+}

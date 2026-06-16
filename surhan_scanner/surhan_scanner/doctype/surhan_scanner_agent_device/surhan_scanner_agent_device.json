@@ -1,0 +1,305 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "field:agent_id",
+ "creation": "2026-06-14 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "allow_upload",
+  "agent_id",
+  "machine_name",
+  "windows_user",
+  "ip_address",
+  "site",
+  "status",
+  "timing_section",
+  "first_seen",
+  "last_seen",
+  "last_scan_at",
+  "last_user",
+  "runtime_section",
+  "agent_version",
+  "config_version",
+  "os_version",
+  "agent_port",
+  "health_url",
+  "scanner_section",
+  "scanner_name",
+  "scanner_driver",
+  "stats_section",
+  "total_heartbeats",
+  "total_scans",
+  "last_upload_status",
+  "last_error",
+  "update_section",
+  "last_update_check",
+  "update_available",
+  "available_version",
+  "last_update_status",
+  "last_update_at",
+  "update_package_url",
+  "update_package_sha256",
+  "last_update_error"
+ ],
+ "fields": [
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled",
+   "default": "1",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "allow_upload",
+   "fieldtype": "Check",
+   "label": "Allow Upload",
+   "default": "1",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "agent_id",
+   "fieldtype": "Data",
+   "label": "Agent ID",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1,
+   "bold": 1
+  },
+  {
+   "fieldname": "machine_name",
+   "fieldtype": "Data",
+   "label": "Machine Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "windows_user",
+   "fieldtype": "Data",
+   "label": "Windows User",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "label": "IP Address",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "site",
+   "fieldtype": "Data",
+   "label": "Site"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Online\nOffline\nWarning\nBlocked",
+   "default": "Online",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "timing_section",
+   "fieldtype": "Section Break",
+   "label": "Timing"
+  },
+  {
+   "fieldname": "first_seen",
+   "fieldtype": "Datetime",
+   "label": "First Seen",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_seen",
+   "fieldtype": "Datetime",
+   "label": "Last Seen",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "last_scan_at",
+   "fieldtype": "Datetime",
+   "label": "Last Scan At"
+  },
+  {
+   "fieldname": "last_user",
+   "fieldtype": "Link",
+   "label": "Last User",
+   "options": "User"
+  },
+  {
+   "fieldname": "runtime_section",
+   "fieldtype": "Section Break",
+   "label": "Runtime"
+  },
+  {
+   "fieldname": "agent_version",
+   "fieldtype": "Data",
+   "label": "Agent Version",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "config_version",
+   "fieldtype": "Data",
+   "label": "Config Version"
+  },
+  {
+   "fieldname": "os_version",
+   "fieldtype": "Data",
+   "label": "OS Version"
+  },
+  {
+   "fieldname": "agent_port",
+   "fieldtype": "Int",
+   "label": "Agent Port"
+  },
+  {
+   "fieldname": "health_url",
+   "fieldtype": "Data",
+   "label": "Health URL"
+  },
+  {
+   "fieldname": "scanner_section",
+   "fieldtype": "Section Break",
+   "label": "Scanner"
+  },
+  {
+   "fieldname": "scanner_name",
+   "fieldtype": "Data",
+   "label": "Scanner Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "scanner_driver",
+   "fieldtype": "Data",
+   "label": "Scanner Driver"
+  },
+  {
+   "fieldname": "stats_section",
+   "fieldtype": "Section Break",
+   "label": "Statistics"
+  },
+  {
+   "fieldname": "total_heartbeats",
+   "fieldtype": "Int",
+   "label": "Total Heartbeats",
+   "default": "0"
+  },
+  {
+   "fieldname": "total_scans",
+   "fieldtype": "Int",
+   "label": "Total Scans",
+   "default": "0",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "last_upload_status",
+   "fieldtype": "Select",
+   "label": "Last Upload Status",
+   "options": "\nSuccess\nFailed"
+  },
+  {
+   "fieldname": "last_error",
+   "fieldtype": "Small Text",
+   "label": "Last Error"
+  },
+  {
+   "fieldname": "update_section",
+   "fieldtype": "Section Break",
+   "label": "Update"
+  },
+  {
+   "fieldname": "last_update_check",
+   "fieldtype": "Datetime",
+   "label": "Last Update Check"
+  },
+  {
+   "fieldname": "update_available",
+   "fieldtype": "Check",
+   "label": "Update Available",
+   "default": "0",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "available_version",
+   "fieldtype": "Data",
+   "label": "Available Version"
+  },
+  {
+   "fieldname": "last_update_status",
+   "fieldtype": "Select",
+   "label": "Last Update Status",
+   "options": "\nNo Update\nAvailable\nDownloaded\nInstalled\nFailed"
+  },
+  {
+   "fieldname": "last_update_at",
+   "fieldtype": "Datetime",
+   "label": "Last Update At"
+  },
+  {
+   "fieldname": "update_package_url",
+   "fieldtype": "Data",
+   "label": "Update Package URL"
+  },
+  {
+   "fieldname": "update_package_sha256",
+   "fieldtype": "Data",
+   "label": "Update Package SHA256"
+  },
+  {
+   "fieldname": "last_update_error",
+   "fieldtype": "Small Text",
+   "label": "Last Update Error"
+  }
+ ],
+ "links": [],
+ "modified": "2026-06-14 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Surhan Scanner",
+ "name": "Surhan Scanner Agent Device",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "Surhan Scanner Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "role": "Surhan Scanner Admin",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "share": 1
+  }
+ ],
+ "quick_entry": 0,
+ "sort_field": "last_seen",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "machine_name",
+ "track_changes": 1
+}

@@ -1,0 +1,68 @@
+.surhan-scanner-wrapper {
+    direction: rtl;
+}
+
+.surhan-scanner-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.surhan-scanner-toolbar .form-control {
+    max-width: 150px;
+}
+
+.surhan-scanner-container {
+    width: 100%;
+    height: 520px;
+    border: 1px solid #d1d8dd;
+    background: #fff;
+    margin-top: 15px;
+    border-radius: 6px;
+}
+
+.surhan-scanner-note {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #eef7ff;
+    color: #16709f;
+    font-size: 13px;
+}
+
+.surhan-scanner-checkbox {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    margin: 0 8px;
+    white-space: nowrap;
+}
+
+.surhan-scanner-inline-button {
+    margin-top: 8px;
+    margin-bottom: 6px;
+}
+
+.surhan-scanner-inline-button .btn {
+    min-width: 110px;
+    border-radius: 8px;
+}
+
+.surhan-scanner-status {
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.surhan-scanner-status.success {
+    color: #198754;
+}
+
+.surhan-scanner-status.warning {
+    color: #b7791f;
+}
+
+.surhan-scanner-status.error {
+    color: #d73502;
+}
