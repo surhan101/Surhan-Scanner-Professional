@@ -1172,7 +1172,7 @@ surhan_scanner.manager = {
 
         const download_url = this.get_absolute_url(
             settings.agent_download_url ||
-            "/assets/surhan_scanner/agent/SurhanScannerAgentSetup.exe"
+            "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip"
         );
 
         const version_url = this.get_absolute_url(

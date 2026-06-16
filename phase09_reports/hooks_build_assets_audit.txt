@@ -1,0 +1,202 @@
+=== Phase 09 Hooks / Build / Assets Audit ===
+
+=== Current Branch ===
+hardening/phase-09-hooks-build-assets
+
+=== Git Status ===
+?? phase09_reports/
+
+=== hooks.py important lines ===
+1:app_name = "surhan_scanner"
+2:app_title = "Surhan Scanner"
+28:app_include_css = [
+32:app_include_js = [
+37:# app_include_css = "/assets/surhan_scanner/css/surhan_scanner.css"
+38:# app_include_js = "/assets/surhan_scanner/js/surhan_scanner.js"
+41:# web_include_css = "/assets/surhan_scanner/css/surhan_scanner.css"
+42:# web_include_js = "/assets/surhan_scanner/js/surhan_scanner.js"
+52:# page_js = {"page" : "public/js/file.js"}
+55:doctype_js = {
+59:# doctype_js = {"doctype" : "public/js/doctype.js"}
+67:# app_include_icons = "surhan_scanner/public/icons.svg"
+102:after_install = "surhan_scanner.install.after_install"
+159:# scheduler_events = {
+266:scheduler_events = {
+
+=== package/build files ===
+
+=== public assets ===
+surhan_scanner/public/agent/AGENT_RELEASE_POLICY.md
+surhan_scanner/public/agent/install_user_startup.bat
+surhan_scanner/public/agent/README_AR.txt
+surhan_scanner/public/agent/releases/SurhanScannerAgentSetup-1.0.0.exe
+surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.0.zip
+surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.1.zip
+surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.2.zip
+surhan_scanner/public/agent/SHA256SUMS.txt
+surhan_scanner/public/agent/start_agent.bat
+surhan_scanner/public/agent/surhan_agent_config.json
+surhan_scanner/public/agent/SurhanScannerAgent.exe
+surhan_scanner/public/agent/uninstall_user_startup.bat
+surhan_scanner/public/agent/update_manifest.json
+surhan_scanner/public/agent/version.json
+surhan_scanner/public/css/surhan_scanner.css
+surhan_scanner/public/.gitkeep
+surhan_scanner/public/js/doctype/surhan_scanner_rule.js
+surhan_scanner/public/js/surhan_scanner.js
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup-arm64.deb
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.deb
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.msi
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.pkg
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.rpm
+surhan_scanner/public/js/webtwain/dist/LICENSE
+surhan_scanner/public/js/webtwain/dynamsoft.lts.js
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.css
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.min.js
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.min.mjs
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.viewer.css
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.viewer.js
+surhan_scanner/public/js/webtwain/src/dynamsoft.lts.js
+surhan_scanner/public/js/webtwain/src/dynamsoft.webtwain.css
+surhan_scanner/public/js/webtwain/src/dynamsoft.webtwain.viewer.css
+surhan_scanner/public/js/webtwain/src/dynamsoft.webtwain.viewer.js
+surhan_scanner/public/js/webtwain/types/Addon.BarcodeReader.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.OCR.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.OCRKit.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.OCRPro.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.PDF.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.Webcam.d.ts
+surhan_scanner/public/js/webtwain/types/Dynamsoft.d.ts
+surhan_scanner/public/js/webtwain/types/Dynamsoft.Enum.d.ts
+surhan_scanner/public/js/webtwain/types/Dynamsoft.FileUploader.d.ts
+surhan_scanner/public/js/webtwain/types/index.d.ts
+surhan_scanner/public/js/webtwain/types/RemoteScan.d.ts
+surhan_scanner/public/js/webtwain/types/RemoteScan.Viewer.d.ts
+surhan_scanner/public/js/webtwain/types/tsconfig.json
+surhan_scanner/public/js/webtwain/types/tslint.json
+surhan_scanner/public/js/webtwain/types/WebTwain.Acquire.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Buffer.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Edit.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.IO.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Util.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Viewer.d.ts
+
+=== JS files ===
+surhan_scanner/public/js/doctype/surhan_scanner_rule.js
+surhan_scanner/public/js/surhan_scanner.js
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup-arm64.deb
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.deb
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.msi
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.pkg
+surhan_scanner/public/js/webtwain/dist/DynamicWebTWAINServiceSetup.rpm
+surhan_scanner/public/js/webtwain/dist/LICENSE
+surhan_scanner/public/js/webtwain/dynamsoft.lts.js
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.css
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.min.js
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.min.mjs
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.viewer.css
+surhan_scanner/public/js/webtwain/dynamsoft.webtwain.viewer.js
+surhan_scanner/public/js/webtwain/src/dynamsoft.lts.js
+surhan_scanner/public/js/webtwain/src/dynamsoft.webtwain.css
+surhan_scanner/public/js/webtwain/src/dynamsoft.webtwain.viewer.css
+surhan_scanner/public/js/webtwain/src/dynamsoft.webtwain.viewer.js
+surhan_scanner/public/js/webtwain/types/Addon.BarcodeReader.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.OCR.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.OCRKit.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.OCRPro.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.PDF.d.ts
+surhan_scanner/public/js/webtwain/types/Addon.Webcam.d.ts
+surhan_scanner/public/js/webtwain/types/Dynamsoft.d.ts
+surhan_scanner/public/js/webtwain/types/Dynamsoft.Enum.d.ts
+surhan_scanner/public/js/webtwain/types/Dynamsoft.FileUploader.d.ts
+surhan_scanner/public/js/webtwain/types/index.d.ts
+surhan_scanner/public/js/webtwain/types/RemoteScan.d.ts
+surhan_scanner/public/js/webtwain/types/RemoteScan.Viewer.d.ts
+surhan_scanner/public/js/webtwain/types/tsconfig.json
+surhan_scanner/public/js/webtwain/types/tslint.json
+surhan_scanner/public/js/webtwain/types/WebTwain.Acquire.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Buffer.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Edit.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.IO.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Util.d.ts
+surhan_scanner/public/js/webtwain/types/WebTwain.Viewer.d.ts
+
+=== CSS files ===
+surhan_scanner/public/css/surhan_scanner.css
+
+=== Agent files ===
+surhan_scanner/public/agent/AGENT_RELEASE_POLICY.md
+surhan_scanner/public/agent/install_user_startup.bat
+surhan_scanner/public/agent/README_AR.txt
+surhan_scanner/public/agent/releases/SurhanScannerAgentSetup-1.0.0.exe
+surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.0.zip
+surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.1.zip
+surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.2.zip
+surhan_scanner/public/agent/SHA256SUMS.txt
+surhan_scanner/public/agent/start_agent.bat
+surhan_scanner/public/agent/surhan_agent_config.json
+surhan_scanner/public/agent/SurhanScannerAgent.exe
+surhan_scanner/public/agent/uninstall_user_startup.bat
+surhan_scanner/public/agent/update_manifest.json
+surhan_scanner/public/agent/version.json
+
+=== Page files ===
+surhan_scanner/page/agent_dashboard/agent_dashboard.html
+surhan_scanner/page/agent_dashboard/agent_dashboard.js
+surhan_scanner/page/agent_dashboard/agent_dashboard.py
+surhan_scanner/page/agent_dashboard/__pycache__/agent_dashboard.cpython-314.pyc
+surhan_scanner/surhan_scanner/page/agent_dashboard/agent_dashboard.html
+surhan_scanner/surhan_scanner/page/agent_dashboard/agent_dashboard.js
+surhan_scanner/surhan_scanner/page/agent_dashboard/agent_dashboard.json
+surhan_scanner/surhan_scanner/page/agent_dashboard/agent_dashboard.py
+surhan_scanner/surhan_scanner/page/agent_dashboard/__init__.py
+surhan_scanner/surhan_scanner/page/agent_dashboard/__pycache__/agent_dashboard.cpython-314.pyc
+surhan_scanner/surhan_scanner/page/agent_dashboard/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/page/__init__.py
+surhan_scanner/surhan_scanner/page/__pycache__/__init__.cpython-314.pyc
+
+=== Duplicate-looking page folders ===
+./surhan_scanner/page
+./surhan_scanner/page/agent_dashboard
+./surhan_scanner/page/agent_dashboard/__pycache__
+./surhan_scanner/surhan_scanner/page
+./surhan_scanner/surhan_scanner/page/agent_dashboard
+./surhan_scanner/surhan_scanner/page/agent_dashboard/__pycache__
+./surhan_scanner/surhan_scanner/page/__pycache__
+./surhan_scanner/templates/pages
+./surhan_scanner/templates/pages/__pycache__
+
+=== Asset URL references ===
+surhan_scanner/agent_api.py:1041:    """يرجع مسار public/agent داخل التطبيق."""
+surhan_scanner/agent_api.py:1051:    """يقرأ Manifest الخاص بتحديث Agent من public/agent."""
+surhan_scanner/api.py:301:                "/assets/surhan_scanner/agent/SurhanScannerAgent.exe"
+surhan_scanner/api.py:311:                "/assets/surhan_scanner/agent/version.json"
+surhan_scanner/hooks.py:17:# 		"logo": "/assets/surhan_scanner/logo.png",
+surhan_scanner/hooks.py:29:    "/assets/surhan_scanner/css/surhan_scanner.css"
+surhan_scanner/hooks.py:33:    #"/assets/surhan_scanner/js/webtwain/dynamsoft.webtwain.min.js",
+surhan_scanner/hooks.py:34:    "/assets/surhan_scanner/js/surhan_scanner.js"
+surhan_scanner/hooks.py:37:# app_include_css = "/assets/surhan_scanner/css/surhan_scanner.css"
+surhan_scanner/hooks.py:38:# app_include_js = "/assets/surhan_scanner/js/surhan_scanner.js"
+surhan_scanner/hooks.py:41:# web_include_css = "/assets/surhan_scanner/css/surhan_scanner.css"
+surhan_scanner/hooks.py:42:# web_include_js = "/assets/surhan_scanner/js/surhan_scanner.js"
+surhan_scanner/hooks.py:45:# website_theme_scss = "surhan_scanner/public/scss/website"
+surhan_scanner/hooks.py:48:# webform_include_js = {"doctype": "public/js/doctype.js"}
+surhan_scanner/hooks.py:52:# page_js = {"page" : "public/js/file.js"}
+surhan_scanner/hooks.py:56:    "Surhan Scanner Rule": "public/js/doctype/surhan_scanner_rule.js"
+surhan_scanner/hooks.py:59:# doctype_js = {"doctype" : "public/js/doctype.js"}
+surhan_scanner/hooks.py:60:# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+surhan_scanner/hooks.py:61:# doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
+surhan_scanner/hooks.py:62:# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+surhan_scanner/hooks.py:67:# app_include_icons = "surhan_scanner/public/icons.svg"
+surhan_scanner/public/js/surhan_scanner.js:1175:            "/assets/surhan_scanner/agent/SurhanScannerAgentSetup.exe"
+surhan_scanner/public/js/surhan_scanner.js:1180:            "/assets/surhan_scanner/agent/version.json"
+surhan_scanner/public/agent/update_manifest.json:9:  "package_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip",
+surhan_scanner/public/agent/version.json:6:  "download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip",
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/surhan_scanner_settings.py:20:            or "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip"
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/surhan_scanner_settings.py:25:            or "/assets/surhan_scanner/agent/version.json"
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/surhan_scanner_settings.json:191:   "default": "/assets/surhan_scanner/agent/SurhanScannerAgentSetup.exe",
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/surhan_scanner_settings.json:203:   "default": "/assets/surhan_scanner/agent/version.json",
+surhan_scanner/install.py:72:            "agent_download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip",
+surhan_scanner/install.py:74:            "agent_version_check_url": "/assets/surhan_scanner/agent/version.json",
