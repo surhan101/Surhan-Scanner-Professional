@@ -1,0 +1,222 @@
+=== Pre Cleanup Orphans ===
+{
+  "disk_files": [
+    {
+      "path": "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_medium_3mb_private_pdf.pdf",
+      "file_url": "/private/files/phase25_medium_3mb_private_pdf.pdf",
+      "size": 3146205
+    },
+    {
+      "path": "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_small_private_pdf.pdf",
+      "file_url": "/private/files/phase25_small_private_pdf.pdf",
+      "size": 431
+    },
+    {
+      "path": "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_.pdf",
+      "file_url": "/private/files/phase25_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_.pdf",
+      "size": 431
+    },
+    {
+      "path": "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_small_private_pdf39be8d.pdf",
+      "file_url": "/private/files/phase25_small_private_pdf39be8d.pdf",
+      "size": 435
+    },
+    {
+      "path": "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_medium_3mb_private_pdf10af1d.pdf",
+      "file_url": "/private/files/phase25_medium_3mb_private_pdf10af1d.pdf",
+      "size": 3146209
+    },
+    {
+      "path": "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_أرشفة_عربية.pdf",
+      "file_url": "/private/files/phase25_أرشفة_عربية.pdf",
+      "size": 431
+    }
+  ],
+  "file_docs": [
+    {
+      "name": "0a1bb59ff1",
+      "file_name": "phase25_medium_3mb_private_pdf10af1d.pdf",
+      "file_url": "/private/files/phase25_medium_3mb_private_pdf10af1d.pdf",
+      "is_private": 1,
+      "attached_to_doctype": "ToDo",
+      "attached_to_name": "7ciu1ot7l0"
+    },
+    {
+      "name": "d55264d448",
+      "file_name": "phase25_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_.pdf",
+      "file_url": "/private/files/phase25_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_.pdf",
+      "is_private": 1,
+      "attached_to_doctype": "ToDo",
+      "attached_to_name": "7cea5knn6f"
+    },
+    {
+      "name": "67ed66f1ac",
+      "file_name": "phase25_أرشفة_عربية.pdf",
+      "file_url": "/private/files/phase25_أرشفة_عربية.pdf",
+      "is_private": 1,
+      "attached_to_doctype": "ToDo",
+      "attached_to_name": "7c8hra7gch"
+    },
+    {
+      "name": "2aec261ada",
+      "file_name": "phase25_small_private_pdf39be8d.pdf",
+      "file_url": "/private/files/phase25_small_private_pdf39be8d.pdf",
+      "is_private": 1,
+      "attached_to_doctype": "ToDo",
+      "attached_to_name": "7b7r65ovdd"
+    }
+  ],
+  "logs": [
+    {
+      "name": "7derc0nrap",
+      "file_name": "phase25_medium_3mb_private_pdf10af1d.pdf",
+      "file_url": "/private/files/phase25_medium_3mb_private_pdf10af1d.pdf",
+      "scan_session_id": "SCAN-20260617-023022-dabd27b5b2614b31",
+      "status": "Success"
+    },
+    {
+      "name": "7chf8ms6j7",
+      "file_name": "phase25_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_.pdf",
+      "file_url": "/private/files/phase25_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_.pdf",
+      "scan_session_id": "SCAN-20260617-023022-84a4bf03667507ed",
+      "status": "Success"
+    },
+    {
+      "name": "7cd32pgqm6",
+      "file_name": "phase25_أرشفة_عربية.pdf",
+      "file_url": "/private/files/phase25_أرشفة_عربية.pdf",
+      "scan_session_id": "SCAN-20260617-023021-a35f750cef1bedfa",
+      "status": "Success"
+    },
+    {
+      "name": "7c6o15uql7",
+      "file_name": "phase25_small_private_pdf39be8d.pdf",
+      "file_url": "/private/files/phase25_small_private_pdf39be8d.pdf",
+      "scan_session_id": "SCAN-20260617-023020-e685a34f34c224be",
+      "status": "Success"
+    }
+  ]
+}
+
+=== Deleted ===
+[
+  [
+    "File",
+    "2aec261ada",
+    true
+  ],
+  [
+    "File",
+    "67ed66f1ac",
+    true
+  ],
+  [
+    "File",
+    "d55264d448",
+    true
+  ],
+  [
+    "File",
+    "0a1bb59ff1",
+    true
+  ],
+  [
+    "Surhan Scanner Log",
+    "7c6o15uql7",
+    true
+  ],
+  [
+    "ToDo",
+    "7b7r65ovdd",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "7bsdkmh9jv",
+    true
+  ],
+  [
+    "Surhan Scanner Log",
+    "7cd32pgqm6",
+    true
+  ],
+  [
+    "ToDo",
+    "7c8hra7gch",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "7c8lh18isb",
+    true
+  ],
+  [
+    "Surhan Scanner Log",
+    "7chf8ms6j7",
+    true
+  ],
+  [
+    "ToDo",
+    "7cea5knn6f",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "7ce4fbapfh",
+    true
+  ],
+  [
+    "Surhan Scanner Log",
+    "7derc0nrap",
+    true
+  ],
+  [
+    "ToDo",
+    "7ciu1ot7l0",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "7cj9vq7ui5",
+    true
+  ],
+  [
+    "ToDo",
+    "7dflqdqf19",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "7dfc43g7gs",
+    true
+  ]
+]
+
+=== Disk Cleanup ===
+[
+  [
+    "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_medium_3mb_private_pdf.pdf",
+    true
+  ],
+  [
+    "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_small_private_pdf.pdf",
+    true
+  ],
+  [
+    "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_small_private_pdf39be8d.pdf",
+    true
+  ],
+  [
+    "/home/frappe/frappe-bench/sites/ysmo/private/files/phase25_أرشفة_عربية.pdf",
+    true
+  ]
+]
+
+=== Post Cleanup Orphans ===
+{
+  "disk_files": [],
+  "file_docs": [],
+  "logs": []
+}
+
+cleanup_ok=True

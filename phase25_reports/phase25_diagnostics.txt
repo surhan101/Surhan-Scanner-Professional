@@ -1,0 +1,260 @@
+=== Phase 25 Diagnostics ===
+
+=== Branch ===
+testing/phase-25-archive-storage-integrity-tests
+
+=== Git Status ===
+?? phase25_reports/
+
+=== Find Scan Log Creation Code ===
+surhan_scanner/agent_api.py:471:def _make_scan_session_id():
+surhan_scanner/agent_api.py:476:def _make_scan_token(scan_session_id):
+surhan_scanner/agent_api.py:479:    raw = f"{scan_session_id}:{random_part}:{now()}".encode("utf-8")
+surhan_scanner/agent_api.py:805:def _normalize_custom_scan_filename(file_name):
+surhan_scanner/agent_api.py:809:    file_name = _safe_filename(file_name)
+surhan_scanner/agent_api.py:810:    file_name = file_name.replace("\n", " ").replace("\r", " ").strip()
+surhan_scanner/agent_api.py:811:    return file_name[:140]
+surhan_scanner/agent_api.py:814:def _build_scan_filename(original_filename, custom_file_name=None):
+surhan_scanner/agent_api.py:817:    إذا وُجد custom_file_name من manager، يتم استخدامه كاسم أساسي
+surhan_scanner/agent_api.py:821:    if not custom_file_name:
+surhan_scanner/agent_api.py:824:    custom_file_name = _normalize_custom_scan_filename(custom_file_name)
+surhan_scanner/agent_api.py:825:    if not custom_file_name:
+surhan_scanner/agent_api.py:829:    custom_base = custom_file_name.rsplit(".", 1)[0] if "." in custom_file_name else custom_file_name
+surhan_scanner/agent_api.py:929:def _create_agent_log(
+surhan_scanner/agent_api.py:939:            "surhan_scanner.api.create_scan_log",
+surhan_scanner/agent_api.py:942:            file_url=file_doc.file_url if file_doc else "",
+surhan_scanner/agent_api.py:943:            file_name=file_doc.file_name if file_doc else "",
+surhan_scanner/agent_api.py:951:            scan_session_id=session_data.get("scan_session_id"),
+surhan_scanner/agent_api.py:1358:    file_name,
+surhan_scanner/agent_api.py:1371:    file_doc.file_name = file_name
+surhan_scanner/agent_api.py:1383:    file_doc.file_url = "s3://{0}/{1}".format(bucket, s3_key)
+surhan_scanner/agent_api.py:1393:    secure_file_url = "/api/method/surhan_scanner.agent_api.download_s3_scan_file?file_name={0}".format(file_doc.name)
+surhan_scanner/agent_api.py:1394:    file_doc.db_set("file_url", secure_file_url, update_modified=False)
+surhan_scanner/agent_api.py:1401:    file_name,
+surhan_scanner/agent_api.py:1417:    s3_key = _make_s3_object_key(config, doctype, docname, file_name)
+surhan_scanner/agent_api.py:1427:            "filename": str(file_name or ""),
+surhan_scanner/agent_api.py:1441:        file_name=file_name,
+surhan_scanner/agent_api.py:1486:def download_s3_scan_file(file_name=None):
+surhan_scanner/agent_api.py:1489:    if not file_name:
+surhan_scanner/agent_api.py:1490:        frappe.throw(_("file_name is required"))
+surhan_scanner/agent_api.py:1492:    if not frappe.db.exists("File", file_name):
+surhan_scanner/agent_api.py:1495:    file_doc = frappe.get_doc("File", file_name)
+surhan_scanner/agent_api.py:2116:    custom_file_name=None,
+surhan_scanner/agent_api.py:2168:    scan_session_id = _make_scan_session_id()
+surhan_scanner/agent_api.py:2169:    scan_token = _make_scan_token(scan_session_id)
+surhan_scanner/agent_api.py:2211:    resolved_custom_file_name = ""
+surhan_scanner/agent_api.py:2212:    if custom_file_name:
+surhan_scanner/agent_api.py:2216:        resolved_custom_file_name = _normalize_custom_scan_filename(custom_file_name)
+surhan_scanner/agent_api.py:2217:        if not resolved_custom_file_name:
+surhan_scanner/agent_api.py:2230:        "scan_session_id": scan_session_id,
+surhan_scanner/agent_api.py:2252:        "custom_file_name": resolved_custom_file_name,
+surhan_scanner/agent_api.py:2287:def _safe_update_target_attach_field(doctype, docname, attach_field, file_url, max_retries=3):
+surhan_scanner/agent_api.py:2300:                file_url,
+surhan_scanner/agent_api.py:2316:            f"file_url={file_url}, error={last_error}"
+surhan_scanner/agent_api.py:2359:def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, file_name=None, max_retries=3):
+surhan_scanner/agent_api.py:2365:       يتم تحديث الحقل مباشرة بقيمة file_url.
+surhan_scanner/agent_api.py:2370:    if not doctype or not docname or not attach_field or not file_url:
+surhan_scanner/agent_api.py:2386:                file_url=file_url,
+surhan_scanner/agent_api.py:2407:            "file_url",
+surhan_scanner/agent_api.py:2438:                row.set(attach_child_field, file_url)
+surhan_scanner/agent_api.py:2442:                    row.set("description", file_name or file_url)
+surhan_scanner/agent_api.py:2445:                    row.set("attachment_no", file_name or "")
+surhan_scanner/agent_api.py:2447:                if child_meta.get_field("file_name"):
+surhan_scanner/agent_api.py:2448:                    row.set("file_name", file_name or "")
+surhan_scanner/agent_api.py:2451:                    row.set("title", file_name or file_url)
+surhan_scanner/agent_api.py:2469:                f"file_url={file_url}, error={last_error}"
+surhan_scanner/agent_api.py:2562:            file_name = _safe_filename(uploaded_file.filename)
+surhan_scanner/agent_api.py:2564:            custom_file_name = session_data.get("custom_file_name")
+surhan_scanner/agent_api.py:2565:            if custom_file_name:
+surhan_scanner/agent_api.py:2566:                file_name = _build_scan_filename(file_name, custom_file_name)
+surhan_scanner/agent_api.py:2581:            file_name = _safe_filename(filename)
+surhan_scanner/agent_api.py:2583:            custom_file_name = session_data.get("custom_file_name")
+surhan_scanner/agent_api.py:2584:            if custom_file_name:
+surhan_scanner/agent_api.py:2585:                file_name = _build_scan_filename(file_name, custom_file_name)
+surhan_scanner/agent_api.py:2607:        if not file_name:
+surhan_scanner/agent_api.py:2617:                filename=file_name,
+surhan_scanner/agent_api.py:2629:                {"extension": _get_extension(file_name), "allowed_file_types": allowed_file_types},
+surhan_scanner/agent_api.py:2664:                    file_name=file_name,
+surhan_scanner/agent_api.py:2677:                    filename=file_name,
+surhan_scanner/agent_api.py:2683:                    fname=file_name,
+surhan_scanner/agent_api.py:2723:                file_url=file_doc.file_url,
+surhan_scanner/agent_api.py:2724:                file_name=file_doc.file_name,
+surhan_scanner/agent_api.py:2761:                            "file_name": file_doc.file_name,
+surhan_scanner/agent_api.py:2762:                            "file_url": file_doc.file_url,
+surhan_scanner/agent_api.py:2793:        _create_agent_log(
+surhan_scanner/agent_api.py:2807:            "scan_session_id": session_data.get("scan_session_id"),
+surhan_scanner/agent_api.py:2810:                "file_name": file_doc.file_name,
+surhan_scanner/agent_api.py:2811:                "file_url": file_doc.file_url,
+surhan_scanner/api.py:428:def create_scan_log(
+surhan_scanner/api.py:431:    file_url=None,
+surhan_scanner/api.py:432:    file_name=None,
+surhan_scanner/api.py:440:    scan_session_id=None,
+surhan_scanner/api.py:453:        "doctype": "Surhan Scanner Log",
+surhan_scanner/api.py:456:        "file_url": file_url,
+surhan_scanner/api.py:457:        "file_name": file_name,
+surhan_scanner/api.py:465:    log_fields = _get_doc_fieldnames("Surhan Scanner Log")
+surhan_scanner/api.py:472:        "scan_session_id": scan_session_id,
+surhan_scanner/hooks.py:17:# 		"logo": "/assets/surhan_scanner/logo.png",
+surhan_scanner/tasks.py:70:    frappe.logger("surhan_scanner").info(f"Hourly cleanup completed: {results}")
+surhan_scanner/tasks.py:79:    frappe.logger("surhan_scanner").info(f"Daily cleanup completed: {results}")
+
+=== Recent Error Logs Related to Phase25 / Long Name / Scanner Log ===
+FOUND_COUNT= 3
+
+--- ERROR LOG ---
+name= 2n0lsljdn4
+creation= 2026-06-17 02:22:23.999593
+method= Surhan Scanner Agent Log Failed
+Traceback (most recent call last):
+  File "apps/surhan_scanner/surhan_scanner/agent_api.py", line 938, in _create_agent_log
+    frappe.call(
+    ~~~~~~~~~~~^
+        "surhan_scanner.api.create_scan_log",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<15 lines>...
+        barcode_source=session_data.get("barcode_source"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "apps/frappe/frappe/__init__.py", line 1129, in call
+    return fn(*args, **newargs)
+  File "apps/frappe/frappe/utils/typing_validations.py", line 36, in wrapper
+    return func(*args, **kwargs)
+  File "apps/surhan_scanner/surhan_scanner/api.py", line 484, in create_scan_log
+    doc.insert(ignore_permissions=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/model/document.py", line 448, in insert
+    self._validate()
+    ~~~~~~~~~~~~~~^^
+  File "apps/frappe/frappe/model/document.py", line 789, in _validate
+    self._validate_length()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "apps/frappe/frappe/model/base_document.py", line 1214, in _validate_length
+    self.throw_length_exceeded_error(df, max_length, value)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/model/base_document.py", line 1251, in throw_length_exceeded_error
+    frappe.throw(
+    ~~~~~~~~~~~~^
+    	_("{0}: '{1}' ({3}) will get truncated, as max characters allowed is {2}").format(
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    	title=_("Value too big"),
+     ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+    	msg,
+     ^^^^
+    ...<7 lines>...
+    	allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.CharacterLengthExceededError: Surhan Scanner Log 2muma4rs3j: '<strong>File URL</strong>' (/private/files/phase25_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_long_.pdf) will get truncated, as max characters allowed is 140
+
+--- ERROR LOG ---
+name= npjrqmlc6o
+creation= 2026-06-17 02:03:45.959833
+method= Surhan Scanner Save File Failed
+Traceback (most recent call last):
+  File "apps/surhan_scanner/surhan_scanner/agent_api.py", line 2619, in _upload_agent_scan
+    file_doc = save_file(
+        fname=file_name,
+    ...<6 lines>...
+        df=attach_field if upload_mode in ["Both", "Set Attach Field"] else None,
+    )
+  File "apps/frappe/frappe/utils/file_manager.py", line 184, in save_file
+    f.insert()
+    ~~~~~~~~^^
+  File "apps/frappe/frappe/model/document.py", line 441, in insert
+    self.run_method("before_insert")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/model/document.py", line 1181, in run_method
+    out = Document.hook(fn)(self, *args, **kwargs)
+  File "apps/frappe/frappe/model/document.py", line 1578, in composer
+    return composed(self, method, *args, **kwargs)
+  File "apps/frappe/frappe/model/document.py", line 1556, in runner
+    add_to_return_value(self, fn(self, *args, **kwargs))
+                              ~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/model/document.py", line 1178, in fn
+    return method_object(*args, **kwargs)
+  File "apps/frappe/frappe/core/doctype/file/file.py", line 125, in before_insert
+    self.save_file(content=self.get_content())
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/core/doctype/file/file.py", line 751, in save_file
+    return self.save_file_on_filesystem()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "apps/frappe/frappe/core/doctype/file/file.py", line 760, in save_file_on_filesystem
+    fpath = self.write_file()
+  File "apps/frappe/frappe/core/doctype/file/file.py", line 674, in write_file
+    self.check_content()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "apps/frappe/frappe/core/doctype/file/file.py", line 410, in check_content
+    if self.file_type == "PDF" and self._content and pdf_contains_js(self._content):
+                                                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/utils/pdf.py", line 433, in pdf_contains_js
+    reader = PdfReader(BytesIO(file_content))
+  File "env/lib/python3.14/site-packages/pypdf/_reader.py", line 149, in __init__
+    self._initialize_stream(stream)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "env/lib/python3.14/site-packages/pypdf/_reader.py", line 171, in _initialize_stream
+    self.read(stream)
+    ~~~~~~~~~^^^^^^^^
+  File "env/lib/python3.14/site-packages/pypdf/_reader.py", line 612, in read
+    self._find_eof_marker(stream)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "env/lib/python3.14/site-packages/pypdf/_reader.py", line 718, in _find_eof_marker
+    line = read_previous_line(stream)
+  File "env/lib/python3.14/site-packages/pypdf/_utils.py", line 316, in read_previous_line
+    raise PdfStreamError(STREAM_TRUNCATED_PREMATURELY)
+pypdf.errors.PdfStreamError: Stream has ended unexpectedly
+
+--- ERROR LOG ---
+name= noche5scmu
+creation= 2026-06-17 02:03:42.017237
+method= Surhan Scanner Save File Failed
+Traceback (most recent call last):
+  File "apps/surhan_scanner/surhan_scanner/agent_api.py", line 2619, in _upload_agent_scan
+    file_doc = save_file(
+        fname=file_name,
+    ...<6 lines>...
+        df=attach_field if upload_mode in ["Both", "Set Attach Field"] else None,
+    )
+  File "apps/frappe/frappe/utils/file_manager.py", line 184, in save_file
+    f.insert()
+    ~~~~~~~~^^
+  File "apps/frappe/frappe/model/document.py", line 441, in insert
+    self.run_method("before_insert")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/model/document.py", line 1181, in run_method
+    out = Document.hook(fn)(self, *args, **kwargs)
+  File "apps/frappe/frappe/model/document.py", line 1578, in composer
+    return composed(self, method, *args, **kwargs)
+  File "apps/frappe/frappe/model/document.py", line 1556, in runner
+    add_to_return_value(self, fn(self, *args, **kwargs))
+                              ~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/model/document.py", line 1178, in fn
+    return method_object(*args, **kwargs)
+  File "apps/frappe/frappe/core/doctype/file/file.py", line 125, in before_insert
+    self.save_file(content=self.get_content())
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/core/doctype/file/file.py", line 716, in save_file
+    self._content = strip_exif_data(self._content, self.content_type)
+                    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "apps/frappe/frappe/utils/image.py", line 34, in strip_exif_data
+    original_image = Image.open(io.BytesIO(content))
+                                ~~~~~~~~~~^^^^^^^^^
+TypeError: a bytes-like object is required, not 'str'
+
+=== Remaining Phase25 Database Artifacts ===
+Surhan Scanner Log []
+File []
+ToDo []
+Surhan Scanner Rule []
