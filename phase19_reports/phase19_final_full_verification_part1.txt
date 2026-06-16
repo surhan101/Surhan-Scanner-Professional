@@ -1,0 +1,90 @@
+=== Phase 19 Final Full Verification ===
+
+=== Branch ===
+hardening/phase-19-final-full-verification
+
+=== Git Status ===
+?? phase19_reports/
+
+=== Last Commits ===
+b127953 (HEAD -> hardening/phase-19-final-full-verification, master, hardening/phase-18-secret-leakage-audit) Phase 18: audit secret leakage and test artifacts
+b0f4ffa (hardening/phase-17-upload-negative-security) Phase 17: verify upload negative security cases
+22c53e8 (hardening/phase-16-upload-e2e-tests) Phase 16: verify scan upload end-to-end
+9eac2a8 (hardening/phase-15-api-guest-security-tests) Phase 15: verify guest API security behavior
+175a582 (hardening/phase-14-agent-download-checks) Phase 14: verify agent release download assets
+ec5ff0f (hardening/phase-13-runtime-ui-checks) Phase 13: verify runtime UI and Frappe desk metadata
+a49ba9b (tag: hardening-post-merge-verified-20260616_074119) Add post-merge verification report
+b719b1b (tag: hardening-complete-phase-11-20260616_073651, hardening/phase-11-final-release-report) Phase 11: add final hardening release report
+76003ac (hardening/phase-10-doctypes-migrations) Phase 10: audit doctypes and verify migration
+ffa1e66 (hardening/phase-09-hooks-build-assets) Phase 09: audit build assets and fix agent asset references
+
+=== Python Compile ===
+PYTHON_COMPILE_OK
+
+=== Pycache / Bytecode Check ===
+surhan_scanner/patches/__pycache__
+surhan_scanner/__pycache__
+surhan_scanner/surhan_scanner/__pycache__
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_agent_device/__pycache__
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_rule/__pycache__
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/__pycache__
+surhan_scanner/surhan_scanner/doctype/__pycache__
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_log/__pycache__
+surhan_scanner/surhan_scanner/page/__pycache__
+surhan_scanner/surhan_scanner/page/agent_dashboard/__pycache__
+surhan_scanner/config/__pycache__
+surhan_scanner/templates/pages/__pycache__
+surhan_scanner/templates/__pycache__
+surhan_scanner/patches/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/__pycache__/permission.cpython-314.pyc
+surhan_scanner/__pycache__/api.cpython-314.pyc
+surhan_scanner/__pycache__/agent_api.cpython-314.pyc
+surhan_scanner/__pycache__/core.cpython-314.pyc
+surhan_scanner/__pycache__/install.cpython-314.pyc
+surhan_scanner/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/__pycache__/hooks.cpython-314.pyc
+surhan_scanner/__pycache__/tasks.cpython-314.pyc
+surhan_scanner/surhan_scanner/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_agent_device/__pycache__/test_surhan_scanner_agent_device.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_agent_device/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_agent_device/__pycache__/surhan_scanner_agent_device.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_rule/__pycache__/test_surhan_scanner_rule.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_rule/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_rule/__pycache__/surhan_scanner_rule.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/__pycache__/surhan_scanner_settings.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/__pycache__/test_surhan_scanner_settings.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_log/__pycache__/surhan_scanner_log.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_log/__pycache__/test_surhan_scanner_log.cpython-314.pyc
+surhan_scanner/surhan_scanner/doctype/surhan_scanner_log/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/page/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/surhan_scanner/page/agent_dashboard/__pycache__/agent_dashboard.cpython-314.pyc
+surhan_scanner/surhan_scanner/page/agent_dashboard/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/config/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/templates/pages/__pycache__/__init__.cpython-314.pyc
+surhan_scanner/templates/__pycache__/__init__.cpython-314.pyc
+
+=== Backup-like Files Check ===
+
+=== Agent Release Files ===
+-rw-rw-r-- 1 frappe frappe 5.8M Jun 13 04:47 surhan_scanner/public/agent/releases/SurhanScannerAgent-v1.0.2.zip
+-rw-rw-r-- 1 frappe frappe 980 Jun 16 07:36 surhan_scanner/public/agent/update_manifest.json
+-rw-rw-r-- 1 frappe frappe 497 Jun 16 07:36 surhan_scanner/public/agent/version.json
+
+=== Agent Manifest Content ===
+success=True
+latest_version=1.0.2
+package_filename=SurhanScannerAgent-v1.0.2.zip
+package_sha256=5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200
+installer_type=runtime_zip
+requires_admin=False
+deployment_mode=user_startup_watchdog
+package_type=runtime_zip
+windows_service_installer=False
+
+=== Secret Scan ===
+SECRET_FINDINGS_NONE
+
+=== Result ===
+PENDING_BENCH_CHECKS
