@@ -1,0 +1,58 @@
+=== Cleanup Deleted ===
+[
+  [
+    "ToDo",
+    "tm7vlldhqf",
+    true
+  ],
+  [
+    "ToDo",
+    "tlvb2aj67q",
+    true
+  ],
+  [
+    "ToDo",
+    "tluubocci5",
+    true
+  ],
+  [
+    "ToDo",
+    "tlp3mc96s2",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "tltokb7tub",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "tlu2cj5131",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "tlvh4bnge7",
+    true
+  ],
+  [
+    "Surhan Scanner Rule",
+    "tm7iu86cse",
+    true
+  ],
+  [
+    "Surhan Scanner Agent Device",
+    "PHASE23-AGENT-001",
+    true
+  ]
+]
+
+=== Remaining ===
+{
+  "targets": [],
+  "rules": [],
+  "logs": [],
+  "agent_devices": []
+}
+
+cleanup_ok=True
