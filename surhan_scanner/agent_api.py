@@ -605,6 +605,64 @@ def _read_temp_file_content(temp_path):
         return file.read()
 
 
+def _ensure_binary_file_content(content):
+    """يضمن أن محتوى الملف bytes قبل تمريره إلى Frappe save_file."""
+    if content is None:
+        return b""
+
+    if isinstance(content, bytes):
+        return content
+
+    if isinstance(content, bytearray):
+        return bytes(content)
+
+    if isinstance(content, memoryview):
+        return content.tobytes()
+
+    if isinstance(content, str):
+        try:
+            return content.encode("latin-1")
+        except Exception:
+            return content.encode("utf-8", errors="ignore")
+
+    try:
+        return bytes(content)
+    except Exception:
+        frappe.throw(_("Invalid uploaded file content"))
+
+
+def _validate_scan_file_content_before_save(filename, content, extension=None):
+    """
+    يفحص PDF والصور قبل save_file حتى لا تتحول الملفات التالفة إلى HTTP 500.
+    """
+    content = _ensure_binary_file_content(content)
+    extension = (extension or _get_extension(filename) or "").lower().strip()
+
+    if not content:
+        frappe.throw(_("Uploaded file is empty"))
+
+    if extension == "pdf":
+        try:
+            from io import BytesIO
+            from pypdf import PdfReader
+
+            PdfReader(BytesIO(content))
+        except Exception:
+            frappe.throw(_("Invalid or corrupted PDF file"))
+
+    elif extension in {"jpg", "jpeg", "png", "tif", "tiff"}:
+        try:
+            from io import BytesIO
+            from PIL import Image
+
+            image = Image.open(BytesIO(content))
+            image.verify()
+        except Exception:
+            frappe.throw(_("Invalid or corrupted image file"))
+
+    return content
+
+
 def _validate_target_doc(doctype, docname, permission_type="write"):
     """يتحقق من وجود المستند وصلاحية المستخدم عليه."""
     if not doctype or not docname:
@@ -2615,6 +2673,11 @@ def _upload_agent_scan(scan_token=None, filename=None, file_content=None):
                 )
             else:
                 content = _read_temp_file_content(temp_path)
+                content = _validate_scan_file_content_before_save(
+                    filename=file_name,
+                    content=content,
+                    extension=extension,
+                )
 
                 file_doc = save_file(
                     fname=file_name,
@@ -2627,7 +2690,23 @@ def _upload_agent_scan(scan_token=None, filename=None, file_content=None):
                     df=attach_field if upload_mode in ["Both", "Set Attach Field"] else None,
                 )
 
-        except Exception:
+        except Exception as exc:
+            error_text = str(exc) or ""
+            validation_markers = [
+                "Invalid or corrupted PDF file",
+                "Invalid or corrupted image file",
+                "Uploaded file is empty",
+                "PdfStreamError",
+                "PdfReadError",
+                "Stream has ended unexpectedly",
+                "cannot identify image file",
+                "image file is truncated",
+                "a bytes-like object is required",
+            ]
+
+            if any(marker.lower() in error_text.lower() for marker in validation_markers):
+                return _response(400, False, "Invalid or corrupted scan file")
+
             frappe.log_error(frappe.get_traceback(), "Surhan Scanner Save File Failed")
             return _response(500, False, "Could not save uploaded scan file")
 
