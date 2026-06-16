@@ -1,0 +1,54 @@
+=== Phase 26 Failure & Recovery Test Result ===
+
+=== Results ===
+bench_doctor: {"label": "bench_doctor", "returncode": 0, "stdout_tail": "-----Checking scheduler status-----\nWorkers online: 2\n-----None Jobs-----", "stderr_tail": ""}
+worker_process_scan: {"label": "worker_process_scan", "returncode": 0, "stdout_tail": "frappe    329131    1849  0 02:08 ?        00:00:13 /home/frappe/frappe-bench/env/bin/python -m frappe.utils.bench_helper frappe worker --queue short,default\nfrappe    329133    1849  0 02:08 ?        00:00:14 /home/frappe/frappe-bench/env/bin/python -m frappe.utils.bench_helper frappe worker --queue long,default,short", "stderr_tail": ""}
+simulated_closed_port_network_failure: {"kind": "expected_network_failure", "ok": true, "error": "ConnectionError", "message": "HTTPConnectionPool(host='127.0.0.1', port=65531): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=65531): Failed to establish a new connection: [Errno 111] Connection refused\"))"}
+invalid_api_route: http=417 message={'exc_type': 'ValidationError', '_server_messages': '["{\\"message\\":\\"Failed to get method for command surhan_scanner.agent_api.__phase26_missing_method__ with module \'surhan_scanner.agent_api\' has no attribute \'__phase26_missing_method__\'\\",\\"as_table\\":false,\\"title\\":\\"Message\\",\\"indicator\\":\\"red\\",\\"raise_exception\\":1,\\"__frappe_exc_id\\":\\"9f24082d237738bb5c379bab44ed8045691a5c431b2498bddeb9fede\\"}"]'}
+upload_without_file: http=400 message=No file uploaded
+target_deleted_before_upload: http=403 message=Target document does not exist
+rule_deleted_before_upload: http=403 message=Invalid scanner rule
+corrupt_pdf_recovery: http=400 message=Invalid or corrupted scan file
+replay_first: http=200 message=Scan uploaded successfully
+replay_second: http=403 message=Invalid or expired scan token
+manifest_invalid_token_after_failures: http=403 message=Invalid or expired scan token
+heartbeat_invalid_token_after_failures: http=403 message=Invalid or expired scan token
+update_status_invalid_token_after_failures: http=403 message=Invalid or expired scan token
+
+=== Token Leakage ===
+{"error_logs": [], "phase26_reports": []}
+
+=== Checks ===
+["db_ping_ok", true, [{"ok": 1}]]
+["cache_ping_ok", true, "ok"]
+["bench_doctor_no_exception", true, {"label": "bench_doctor", "returncode": 0, "stdout_tail": "-----Checking scheduler status-----\nWorkers online: 2\n-----None Jobs-----", "stderr_tail": ""}]
+["worker_scan_no_exception", true, {"label": "worker_process_scan", "returncode": 0, "stdout_tail": "frappe    329131    1849  0 02:08 ?        00:00:13 /home/frappe/frappe-bench/env/bin/python -m frappe.utils.bench_helper frappe worker --queue short,default\nfrappe    329133    1849  0 02:08 ?        00:00:14 /home/frappe/frappe-bench/env/bin/python -m frappe.utils.bench_helper frappe worker --queue long,default,short", "stderr_tail": ""}]
+["simulated_closed_port_expected_failure", true, {"kind": "expected_network_failure", "ok": true, "error": "ConnectionError", "message": "HTTPConnectionPool(host='127.0.0.1', port=65531): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=65531): Failed to establish a new connection: [Errno 111] Connection refused\"))"}]
+["invalid_api_route_not_500", true, {"kind": "http", "http_status": 417, "message": {"exc_type": "ValidationError", "_server_messages": "[\"{\\\"message\\\":\\\"Failed to get method for command surhan_scanner.agent_api.__phase26_missing_method__ with module 'surhan_scanner.agent_api' has no attribute '__phase26_missing_method__'\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\",\\\"indicator\\\":\\\"red\\\",\\\"raise_exception\\\":1,\\\"__frappe_exc_id\\\":\\\"9f24082d237738bb5c379bab44ed8045691a5c431b2498bddeb9fede\\\"}\"]"}}]
+["invalid_api_route_safe_status_or_exception", true, {"kind": "http", "http_status": 417, "message": {"exc_type": "ValidationError", "_server_messages": "[\"{\\\"message\\\":\\\"Failed to get method for command surhan_scanner.agent_api.__phase26_missing_method__ with module 'surhan_scanner.agent_api' has no attribute '__phase26_missing_method__'\\\",\\\"as_table\\\":false,\\\"title\\\":\\\"Message\\\",\\\"indicator\\\":\\\"red\\\",\\\"raise_exception\\\":1,\\\"__frappe_exc_id\\\":\\\"9f24082d237738bb5c379bab44ed8045691a5c431b2498bddeb9fede\\\"}\"]"}}]
+["upload_without_file_400", true, {"kind": "http", "http_status": 400, "message": {"success": false, "message": "No file uploaded"}}]
+["upload_without_file_no_500", true, {"kind": "http", "http_status": 400, "message": {"success": false, "message": "No file uploaded"}}]
+["target_deleted_before_upload_403", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Target document does not exist"}}]
+["target_deleted_before_upload_no_500", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Target document does not exist"}}]
+["rule_deleted_before_upload_403", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid scanner rule"}}]
+["rule_deleted_before_upload_no_500", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid scanner rule"}}]
+["corrupt_pdf_400", true, {"kind": "http", "http_status": 400, "message": {"success": false, "message": "Invalid or corrupted scan file"}}]
+["corrupt_pdf_no_500", true, {"kind": "http", "http_status": 400, "message": {"success": false, "message": "Invalid or corrupted scan file"}}]
+["replay_first_success", true, {"kind": "http", "http_status": 200, "message": {"success": true, "message": "Scan uploaded successfully", "scan_session_id": "SCAN-20260617-023325-33fcf6d1e0a7a9da", "file": {"name": "666bf4ef6d", "file_name": "phase26_replay_recovery_1781652805.pdf", "file_url": "/private/files/phase26_replay_recovery_1781652805.pdf", "file_size": 429, "is_private": 1, "extension": "pdf", "detected_extension": "pdf", "mime_type": "application/pdf"}, "doctype": "ToDo", "docname": "95lrsbe2ap", "attach_field": "", "upload_mode": "Attachment Only"}}]
+["replay_second_rejected", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}]
+["replay_no_500", true, {"first": {"kind": "http", "http_status": 200, "message": {"success": true, "message": "Scan uploaded successfully", "scan_session_id": "SCAN-20260617-023325-33fcf6d1e0a7a9da", "file": {"name": "666bf4ef6d", "file_name": "phase26_replay_recovery_1781652805.pdf", "file_url": "/private/files/phase26_replay_recovery_1781652805.pdf", "file_size": 429, "is_private": 1, "extension": "pdf", "detected_extension": "pdf", "mime_type": "application/pdf"}, "doctype": "ToDo", "docname": "95lrsbe2ap", "attach_field": "", "upload_mode": "Attachment Only"}}, "second": {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}}]
+["manifest_invalid_token_after_failures_403", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}]
+["manifest_invalid_token_after_failures_no_500", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}]
+["heartbeat_invalid_token_after_failures_403", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}]
+["heartbeat_invalid_token_after_failures_no_500", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}]
+["update_status_invalid_token_after_failures_403", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}]
+["update_status_invalid_token_after_failures_no_500", true, {"kind": "http", "http_status": 403, "message": {"success": false, "message": "Invalid or expired scan token"}}]
+["scan_token_not_in_recent_error_logs", true, []]
+["scan_token_not_in_phase26_reports", true, []]
+["cleanup_ok", true, {"targets": [], "rules": [], "logs": [], "files": [], "disk_files": []}]
+
+=== Cleanup ===
+cleanup_ok=True
+
+=== Result ===
+PASSED
