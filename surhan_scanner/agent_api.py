@@ -2296,7 +2296,16 @@ def _safe_update_target_fields(doctype, docname, updates, max_retries=3):
 
 
 def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, file_name=None, max_retries=3):
-    """يدعم رفع المرفق إلى حقل Attach مباشر أو إلى Child Table يحتوي حقل Attach."""
+    """
+    يربط الملف بالمستند الهدف بطريقة آمنة.
+
+    يدعم حالتين:
+    1) حقل Attach / Attach Image مباشر:
+       يتم تحديث الحقل مباشرة بقيمة file_url.
+
+    2) حقل Table:
+       يتم إنشاء صف جديد داخل Child Table، ثم تعبئة أول حقل Attach/Attach Image داخل الجدول.
+    """
     if not doctype or not docname or not attach_field or not file_url:
         return True, ""
 
@@ -2307,6 +2316,7 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
         if not df:
             return False, f"Attach field does not exist: {attach_field}"
 
+        # الحالة الأولى: حقل Attach مباشر
         if df.fieldtype in ["Attach", "Attach Image"]:
             ok = _safe_update_target_attach_field(
                 doctype=doctype,
@@ -2317,6 +2327,7 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
             )
             return ok, "" if ok else "Could not update attach field"
 
+        # الحالة الثانية: يجب أن يكون Table
         if df.fieldtype != "Table":
             return False, f"Unsupported attach field type: {df.fieldtype}"
 
@@ -2328,9 +2339,25 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
 
         attach_child_field = None
 
-        if child_meta.get_field("attachment_file") and child_meta.get_field("attachment_file").fieldtype in ["Attach", "Attach Image"]:
-            attach_child_field = "attachment_file"
-        else:
+        # أسماء مفضلة إن وجدت
+        preferred_fields = [
+            "attachment_file",
+            "file",
+            "file_url",
+            "attach",
+            "attachment",
+            "scan_file",
+            "document",
+        ]
+
+        for fieldname in preferred_fields:
+            child_df = child_meta.get_field(fieldname)
+            if child_df and child_df.fieldtype in ["Attach", "Attach Image"]:
+                attach_child_field = fieldname
+                break
+
+        # fallback: أول حقل Attach/Attach Image داخل الجدول
+        if not attach_child_field:
             for child_df in child_meta.fields:
                 if child_df.fieldname and child_df.fieldtype in ["Attach", "Attach Image"]:
                     attach_child_field = child_df.fieldname
@@ -2349,11 +2376,18 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
                 row = doc.append(attach_field, {})
                 row.set(attach_child_field, file_url)
 
+                # حقول وصفية اختيارية إن كانت موجودة في Child Table
                 if child_meta.get_field("description"):
                     row.set("description", file_name or file_url)
 
                 if child_meta.get_field("attachment_no"):
                     row.set("attachment_no", file_name or "")
+
+                if child_meta.get_field("file_name"):
+                    row.set("file_name", file_name or "")
+
+                if child_meta.get_field("title"):
+                    row.set("title", file_name or file_url)
 
                 doc.save(ignore_permissions=False)
                 return True, ""
@@ -2370,12 +2404,11 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
             title="Surhan Scanner Child Table Attach Failed",
             message=(
                 f"doctype={doctype}, docname={docname}, table_field={attach_field}, "
+                f"child_doctype={child_doctype}, child_attach_field={attach_child_field}, "
                 f"file_url={file_url}, error={last_error}"
             ),
         )
         return False, str(last_error)
-
-        return False, "Unknown attach update failure"
 
     except Exception as exc:
         frappe.log_error(frappe.get_traceback(), "Surhan Scanner Attach Routing Failed")
