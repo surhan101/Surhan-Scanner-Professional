@@ -1,0 +1,15 @@
+=== Python Import Check ===
+Interpreter: bench env python
+
+OK: frappe
+OK: surhan_scanner.hooks
+OK: surhan_scanner.install
+OK: surhan_scanner.api
+OK: surhan_scanner.agent_api
+OK: surhan_scanner.surhan_scanner.doctype.surhan_scanner_agent_device.surhan_scanner_agent_device
+OK: surhan_scanner.surhan_scanner.doctype.surhan_scanner_log.surhan_scanner_log
+OK: surhan_scanner.surhan_scanner.doctype.surhan_scanner_rule.surhan_scanner_rule
+OK: surhan_scanner.surhan_scanner.doctype.surhan_scanner_settings.surhan_scanner_settings
+
+=== Result ===
+PASSED

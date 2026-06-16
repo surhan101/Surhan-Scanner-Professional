@@ -1,0 +1,7 @@
+=== Agent Dashboard Duplicate Cleanup ===
+
+MATCH: surhan_scanner/page/agent_dashboard/agent_dashboard.html == surhan_scanner/surhan_scanner/page/agent_dashboard/agent_dashboard.html
+MATCH: surhan_scanner/page/agent_dashboard/agent_dashboard.js == surhan_scanner/surhan_scanner/page/agent_dashboard/agent_dashboard.js
+MATCH: surhan_scanner/page/agent_dashboard/agent_dashboard.py == surhan_scanner/surhan_scanner/page/agent_dashboard/agent_dashboard.py
+
+All duplicate page files match. Removing orphan top-level page folder.
