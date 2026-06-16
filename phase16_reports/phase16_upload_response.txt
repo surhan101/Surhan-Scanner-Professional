@@ -1,0 +1,14 @@
+HTTP/1.1 200 OK
+Server: gunicorn
+Date: Tue, 16 Jun 2026 05:22:46 GMT
+Connection: close
+Content-Type: application/json
+Content-Length: 480
+Cache-Control: no-store,no-cache,must-revalidate,max-age=0
+Set-Cookie: sid=Guest; Expires=Tue, 23 Jun 2026 07:22:46 GMT; Max-Age=612000; HttpOnly; Path=/; SameSite=Lax
+Set-Cookie: system_user=no; Path=/; SameSite=Lax
+Set-Cookie: full_name=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_id=Guest; Path=/; SameSite=Lax
+Set-Cookie: user_lang=en; Path=/; SameSite=Lax
+
+{"message":{"success":true,"message":"Scan uploaded successfully","scan_session_id":"SCAN-20260616-082234-f1abbf50364c06be","file":{"name":"b38bc47181","file_name":"phase16_e2e_retry_20260616_082230eac045.pdf","file_url":"/private/files/phase16_e2e_retry_20260616_082230eac045.pdf","file_size":607,"is_private":1,"extension":"pdf","detected_extension":"pdf","mime_type":"application/pdf"},"doctype":"ToDo","docname":"a032107cei","attach_field":"","upload_mode":"Attachment Only"}}
