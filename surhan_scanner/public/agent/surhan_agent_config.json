@@ -12,7 +12,7 @@
   "scan_timeout_seconds": 180,
   "work_dir": "",
   "default_output_type": "pdf",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "edition": "Enterprise",
   "scanner": {
     "default_file_type": "pdf"
@@ -44,11 +44,13 @@
     "allowed_upload_method_path": "/api/method/surhan_scanner.agent_api.upload_agent_scan"
   },
   "enterprise": {
-    "deployment_mode": "user_startup",
+    "deployment_mode": "user_startup_watchdog",
     "minimum_farabi_app_version": "1.0.0",
-    "required_agent_version": "1.0.0",
+    "required_agent_version": "1.0.2",
     "compatible_agent_versions": [
-      "1.0.0"
+      "1.0.0",
+      "1.0.1",
+      "1.0.2"
     ]
   },
   "server": {
@@ -58,5 +60,6 @@
       "http://10.100.4.2",
       "http://10.100.4.2:8000"
     ]
-  }
+  },
+  "deployment_mode": "user_startup_watchdog"
 }

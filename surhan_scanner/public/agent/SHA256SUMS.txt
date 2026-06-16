@@ -1,1 +1,1 @@
-7408d2ff387104c173082db60eff5d6785829c7ab517690599f531de1c313eb8  releases/SurhanScannerAgent-v1.0.0.zip
+5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200  releases/SurhanScannerAgent-v1.0.2.zip

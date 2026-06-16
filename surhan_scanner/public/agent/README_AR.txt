@@ -1,4 +1,4 @@
-Surhan Scanner Agent Enterprise v1.0.0
+Surhan Scanner Agent Enterprise v1.0.2
 
 هذه حزمة نظيفة لتشغيل Surhan Scanner Agent على Windows x64.
 
@@ -12,7 +12,7 @@ Surhan Scanner Agent Enterprise v1.0.0
 - README_AR.txt
 
 طريقة التثبيت:
-1. فك ضغط ملف SurhanScannerAgent-v1.0.0.zip
+1. فك ضغط ملف SurhanScannerAgent-v1.0.2.zip
 2. شغل install_user_startup.bat
 3. سيتم إعداد Agent ليعمل مع بدء تشغيل المستخدم
 4. لتشغيله يدويًا استخدم start_agent.bat
@@ -42,6 +42,11 @@ Surhan Scanner Agent Enterprise v1.0.0
 - ملف SHA256SUMS.txt موجود خارج الحزمة للتحقق من سلامة الملفات والحزمة.
 
 الإصدار:
-- Agent Version: 1.0.0
+- Agent Version: 1.0.2
 - Package Type: ZIP
 - Deployment Mode: User Startup
+
+## ملاحظة التشغيل
+هذه النسخة هي Runtime ZIP وتعمل بنمط user_startup_watchdog.
+لا تحتوي هذه الحزمة على مثبت Windows Service مستقل.
+ملف Setup الخاص بالخدمة يحتاج بناء نسخة مستقلة عند إصدار Service Installer.
