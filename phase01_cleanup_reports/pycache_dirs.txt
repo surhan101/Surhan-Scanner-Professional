@@ -1,7 +1,0 @@
-./surhan_scanner/__pycache__
-./surhan_scanner/surhan_scanner/doctype/__pycache__
-./surhan_scanner/surhan_scanner/doctype/surhan_scanner_agent_device/__pycache__
-./surhan_scanner/surhan_scanner/doctype/surhan_scanner_log/__pycache__
-./surhan_scanner/surhan_scanner/doctype/surhan_scanner_rule/__pycache__
-./surhan_scanner/surhan_scanner/doctype/surhan_scanner_settings/__pycache__
-./surhan_scanner/surhan_scanner/__pycache__

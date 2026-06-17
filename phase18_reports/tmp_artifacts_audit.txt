@@ -1,4 +1,0 @@
-=== Tmp Artifacts Audit ===
-
-=== Result ===
-PASSED

@@ -1,4 +1,0 @@
-  File "surhan_scanner/agent_api.py", line 3189
-    import os
-    ^^^^^^
-SyntaxError: invalid syntax

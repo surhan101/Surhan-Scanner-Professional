@@ -61,3 +61,42 @@ jspm_packages/
 *.orig
 *.tmp
 *~
+# Surhan Scanner repository hygiene
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.bak
+*.backup
+*.tmp
+*.swp
+*.swo
+
+# Frappe site/private data must never be committed
+sites/*/site_config.json
+sites/*/private/
+sites/*/public/files/
+sites/*/logs/
+sites/*/backups/
+
+# Database and secret material
+*.sql
+*.sql.gz
+*.dump
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local audit exports
+surhan_internal_audits/
+docs/raw/
+docs/internal/
+# Internal phase reports and local audit outputs
+phase*_reports/
+phase*_report/
+phase*_results/
+*_reports/
+*_audit/
+
