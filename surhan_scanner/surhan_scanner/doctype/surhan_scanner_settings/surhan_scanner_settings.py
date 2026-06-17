@@ -19,7 +19,7 @@ class SurhanScannerSettings(Document):
             self.agent_download_url
             or "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe"
         )
-        self.agent_latest_version = self.agent_latest_version or "1.0.2"
+        self.agent_latest_version = self.agent_latest_version or "1.0.0"
         self.agent_version_check_url = (
             self.agent_version_check_url
             or "/assets/surhan_scanner/agent/version.json"

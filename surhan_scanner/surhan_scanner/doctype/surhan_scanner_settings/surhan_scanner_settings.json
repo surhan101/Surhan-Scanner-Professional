@@ -194,7 +194,7 @@
    "label": "Agent Download URL"
   },
   {
-   "default": "1.0.2",
+   "default": "1.0.0",
    "fieldname": "agent_latest_version",
    "fieldtype": "Data",
    "label": "Agent Latest Version"
@@ -215,10 +215,11 @@
    "fieldname": "agent_install_mode",
    "fieldtype": "Select",
    "label": "Agent Install Mode",
-   "options": "\nUser Startup\nWindows Service\nScheduled Task\nPortable\nDisabled"
+   "options": "\nUser Startup\nWindows Service\nScheduled Task\nPortable\nDisabled",
+   "default": "Windows Service"
   },
   {
-   "default": "C:\\Program Files\\Surhan Scanner Agent",
+   "default": "C:\\Program Files\\SurhanScannerAgent",
    "fieldname": "agent_install_path",
    "fieldtype": "Data",
    "label": "Agent Install Path"
