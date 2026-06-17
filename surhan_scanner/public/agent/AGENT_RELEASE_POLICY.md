@@ -1,67 +1,74 @@
 # Surhan Scanner Agent Release Policy
 
-## Official Agent Name
+## Active Production Package
 
-Surhan Scanner Agent Enterprise
-
-## Current Latest Runtime
-
-The latest supported runtime package is:
-
-SurhanScannerAgent-v1.0.2.zip
-
-Version:
-
-1.0.2
-
-## Deployment Mode
-
-The latest runtime package uses:
-
-user_startup_watchdog
-
-It is a Runtime ZIP package.
-
-## Important Windows Service Note
-
-SurhanScannerAgent-v1.0.2.zip is not a Windows Service installer.
-
-It does not include:
-
-- service installer
-- sc create script
-- NSSM
-- WinSW
-- setup executable
-
-Therefore, the update manifest must not describe version 1.0.2 as a Windows Service installer.
-
-## Legacy Service Installer
-
-The repository still contains:
+The active production package for Surhan Scanner Agent is:
 
 SurhanScannerAgentSetup-1.0.0.exe
 
-This file is a legacy service installer for version 1.0.0.
+## Version
 
-It must not be used as the latest update package while latest_version is 1.0.2.
+1.0.0
 
-## Current Manifest Policy
+## Deployment Mode
 
-The update manifest must use:
+windows_service
 
-- latest_version: 1.0.2
-- package_filename: SurhanScannerAgent-v1.0.2.zip
-- archive_format: zip
-- installer_type: runtime_zip
-- deployment_mode: user_startup_watchdog
-- windows_service_installer: false
-- requires_admin: false
+## Installer Type
 
-## Future Work
+windows_service_installer
 
-If Windows Service deployment is required for the latest Agent, a new installer must be built separately, for example:
+## Package Details
 
-SurhanScannerAgentSetup-1.0.2.exe
+- package_filename: SurhanScannerAgentSetup-1.0.0.exe
+- package_url: /assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe
+- package_sha256: 6792b3644e457ab031c234e3405e9d7d8ad7e22c2ba230a946f14de568c71f1d
+- package_size_bytes: 4431416
+- archive_format: exe
+- installer_type: windows_service_installer
+- deployment_mode: windows_service
+- windows_service_installer: true
+- requires_admin: true
 
-Only after that should the manifest be changed to service installer mode.
+## Windows Service Behavior
+
+The installer creates a Windows Service with the following identity:
+
+- Service Name: SurhanScannerAgent
+- Display Name: Surhan Scanner Agent
+- Startup Type: Automatic
+- Log On As: LocalSystem
+- Health URL: http://127.0.0.1:8787/health
+- Devices URL: http://127.0.0.1:8787/devices
+
+The service is expected to start automatically after Windows restart.
+
+## Recovery Behavior
+
+The installer configures Windows Service recovery so the service restarts automatically on failure.
+
+## Current Server Manifest
+
+The active update_manifest.json must point to:
+
+SurhanScannerAgentSetup-1.0.0.exe
+
+The active version.json must point to:
+
+/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe
+
+## Previous Rollback Packages
+
+The previous agent packages are retained only for rollback and reference:
+
+- SurhanScannerAgent-v1.0.0.zip
+- SurhanScannerAgent-v1.0.1.zip
+- SurhanScannerAgent-v1.0.2.zip
+
+They are not the active production download package after Phase 31.
+
+## Notes
+
+This service installer requires Administrator privileges on Windows because it creates a Windows Service under Program Files.
+
+The Agent must still be tested with a real scanner device after installation. If /devices returns an empty list while no scanner is connected, that is expected behavior.

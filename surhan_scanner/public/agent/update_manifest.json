@@ -2,29 +2,39 @@
   "success": true,
   "product": "Surhan Scanner Agent",
   "channel": "stable",
-  "latest_version": "1.0.2",
+  "latest_version": "1.0.0",
   "minimum_supported_version": "1.0.0",
   "mandatory": false,
-  "package_filename": "SurhanScannerAgent-v1.0.2.zip",
-  "package_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent-v1.0.2.zip",
-  "package_sha256": "5ee837bf4cb057906588b32c92c53ea43a7f594183b7a11975ae85372b990200",
-  "package_size_bytes": 6046084,
+  "package_filename": "SurhanScannerAgentSetup-1.0.0.exe",
+  "package_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe",
+  "package_sha256": "6792b3644e457ab031c234e3405e9d7d8ad7e22c2ba230a946f14de568c71f1d",
+  "package_size_bytes": 4431416,
   "hash_algorithm": "sha256",
-  "archive_format": "zip",
-  "installer_type": "runtime_zip",
-  "requires_admin": false,
-  "release_date": "2026-06-14T23:30:00+03:00",
+  "archive_format": "exe",
+  "installer_type": "windows_service_installer",
+  "requires_admin": true,
+  "release_date": "2026-06-17T03:35:00+03:00",
   "code_signing": {
     "required": false,
     "status": "not_signed"
   },
   "notes": [
-    "Surhan Scanner Agent Enterprise 1.0.2",
-    "Runtime ZIP package",
-    "Deployment mode: user_startup_watchdog",
-    "Does not include Windows Service installer"
+    "Surhan Scanner Agent Windows Service Installer",
+    "Installs to Program Files",
+    "Creates Windows Service: SurhanScannerAgent",
+    "Startup mode: Automatic",
+    "Recovery mode: restart on failure",
+    "Requires Administrator privileges"
   ],
-  "deployment_mode": "user_startup_watchdog",
-  "package_type": "runtime_zip",
-  "windows_service_installer": false
+  "deployment_mode": "windows_service",
+  "package_type": "windows_service_installer",
+  "windows_service_installer": true,
+  "service": {
+    "name": "SurhanScannerAgent",
+    "display_name": "Surhan Scanner Agent",
+    "startup_type": "automatic",
+    "log_on_as": "LocalSystem",
+    "health_url": "http://127.0.0.1:8787/health",
+    "devices_url": "http://127.0.0.1:8787/devices"
+  }
 }

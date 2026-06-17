@@ -1,52 +1,90 @@
-Surhan Scanner Agent Enterprise v1.0.2
+Surhan Scanner Agent Enterprise
 
-هذه حزمة نظيفة لتشغيل Surhan Scanner Agent على Windows x64.
+حزمة التثبيت المعتمدة حاليًا:
 
-محتويات الحزمة:
-- SurhanScannerAgent.exe
-- surhan_agent_config.json
-- version.json
-- install_user_startup.bat
-- uninstall_user_startup.bat
-- start_agent.bat
-- README_AR.txt
+SurhanScannerAgentSetup-1.0.0.exe
+
+نوع الحزمة:
+
+مثبت Windows Service
+
+وضع التشغيل:
+
+windows_service
+
+اسم الخدمة:
+
+SurhanScannerAgent
+
+اسم العرض في Windows Services:
+
+Surhan Scanner Agent
 
 طريقة التثبيت:
-1. فك ضغط ملف SurhanScannerAgent-v1.0.2.zip
-2. شغل install_user_startup.bat
-3. سيتم إعداد Agent ليعمل مع بدء تشغيل المستخدم
-4. لتشغيله يدويًا استخدم start_agent.bat
-5. تحقق من التشغيل عبر:
-   http://127.0.0.1:8787/health
 
-طريقة الإزالة:
-- شغل uninstall_user_startup.bat
+1. قم بتنزيل ملف SurhanScannerAgentSetup-1.0.0.exe.
+2. شغل الملف كمسؤول Administrator.
+3. وافق على نافذة الصلاحيات UAC إذا ظهرت.
+4. سيقوم المثبت بتثبيت البرنامج داخل:
+   C:\Program Files\SurhanScannerAgent
+5. سيقوم المثبت بإنشاء خدمة Windows باسم:
+   SurhanScannerAgent
+6. سيتم تشغيل الخدمة تلقائيًا.
+7. بعد إعادة تشغيل الجهاز، ستعمل الخدمة تلقائيًا لأنها مضبوطة على Automatic.
 
-أنواع الملفات المسموحة:
-- PDF
-- JPG / JPEG
-- PNG
-- TIF / TIFF
+طريقة التحقق بعد التثبيت:
 
-أنواع الملفات الممنوعة:
-- TXT / CSV / RTF
-- Word / Excel / PowerPoint
-- EXE / BAT / CMD / PS1 / VBS / JS / HTML / SVG
+افتح PowerShell كمسؤول ونفذ:
 
-ملاحظات:
-- يجب أن يكون Scanner معرفًا على Windows.
-- يستخدم Agent المنفذ 8787.
-- إذا كان المنفذ مستخدمًا، أوقف النسخة القديمة:
-  netstat -ano | findstr :8787
-  taskkill /PID الرقم /F
-- ملف SHA256SUMS.txt موجود خارج الحزمة للتحقق من سلامة الملفات والحزمة.
+Get-Service SurhanScannerAgent
 
-الإصدار:
-- Agent Version: 1.0.2
-- Package Type: ZIP
-- Deployment Mode: User Startup
+المطلوب أن تكون الحالة:
 
-## ملاحظة التشغيل
-هذه النسخة هي Runtime ZIP وتعمل بنمط user_startup_watchdog.
-لا تحتوي هذه الحزمة على مثبت Windows Service مستقل.
-ملف Setup الخاص بالخدمة يحتاج بناء نسخة مستقلة عند إصدار Service Installer.
+Running
+
+للتحقق من إعداد الخدمة:
+
+Get-CimInstance Win32_Service -Filter "Name='SurhanScannerAgent'" |
+Select-Object Name, DisplayName, State, StartMode, StartName, PathName
+
+المطلوب:
+
+State = Running
+StartMode = Auto
+StartName = LocalSystem
+
+للتحقق من عمل الـ Agent:
+
+Invoke-WebRequest http://127.0.0.1:8787/health -UseBasicParsing
+
+المطلوب:
+
+StatusCode = 200
+
+للتحقق من أجهزة السكانر:
+
+Invoke-WebRequest http://127.0.0.1:8787/devices -UseBasicParsing
+
+إذا لم يكن هناك Scanner متصل، فمن الطبيعي أن تظهر الرسالة:
+
+No scanners found
+
+ملاحظات مهمة:
+
+- التثبيت يتطلب صلاحية Administrator.
+- الخدمة تعمل تلقائيًا بعد إعادة تشغيل Windows.
+- الخدمة تعمل من المسار:
+  C:\Program Files\SurhanScannerAgent\SurhanScannerAgent.exe
+- ملف الإعداد يمكن أن يوجد في:
+  C:\SurhanScannerAgent\surhan_agent_config.json
+  أو:
+  C:\ProgramData\SurhanScannerAgent\surhan_agent_config.json
+- يجب كتابة ملف الإعداد بصيغة UTF-8 بدون BOM إذا تم تعديله يدويًا.
+- إذا كان المستخدم يدخل فارابي من متصفح، يجب أن يكون رابط فارابي موجودًا ضمن allowed_farabi_origins.
+- حاليًا الروابط المعتمدة في البيئة المختبرة:
+  http://192.168.71.128
+  http://10.100.4.2
+
+تنبيه:
+
+الحزم ZIP السابقة موجودة للرجوع فقط، وليست حزمة التنزيل الإنتاجية الحالية بعد اعتماد Windows Service Installer.
