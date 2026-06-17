@@ -30,6 +30,9 @@
   "agent_download_url",
   "agent_latest_version",
   "agent_version_check_url",
+  "agent_config_note",
+  "agent_allowed_farabi_origins",
+  "farabi_base_url",
   "show_agent_install_dialog",
   "agent_install_mode",
   "agent_install_path",
@@ -204,6 +207,26 @@
    "fieldname": "agent_version_check_url",
    "fieldtype": "Data",
    "label": "Agent Version Check URL"
+  },
+  {
+   "fieldname": "farabi_base_url",
+   "fieldtype": "Data",
+   "label": "Farabi Base URL",
+   "description": "Public Farabi origin used by Windows Agent CORS configuration, for example https://farabi.example.com or http://192.168.1.50. Leave empty to use the current browser/server origin during setup.",
+   "default": ""
+  },
+  {
+   "fieldname": "agent_allowed_farabi_origins",
+   "fieldtype": "Small Text",
+   "label": "Agent Allowed Farabi Origins",
+   "description": "One Farabi origin per line. These values are copied to the Windows Agent allowed_farabi_origins configuration during workstation setup.",
+   "default": ""
+  },
+  {
+   "fieldname": "agent_config_note",
+   "fieldtype": "HTML",
+   "label": "Agent Configuration Note",
+   "options": "<div class='alert alert-info'>Windows Service Agent requires the Farabi URL to be added to allowed_farabi_origins on each workstation. Use the provided Configure-SurhanScannerAgent.ps1 script after installation.</div>"
   },
   {
    "default": "1",

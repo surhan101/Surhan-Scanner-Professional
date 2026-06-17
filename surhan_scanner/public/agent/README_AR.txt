@@ -82,9 +82,18 @@ No scanners found
 - يجب كتابة ملف الإعداد بصيغة UTF-8 بدون BOM إذا تم تعديله يدويًا.
 - إذا كان المستخدم يدخل فارابي من متصفح، يجب أن يكون رابط فارابي موجودًا ضمن allowed_farabi_origins.
 - حاليًا الروابط المعتمدة في البيئة المختبرة:
-  http://192.168.71.128
-  http://10.100.4.2
+  https://farabi.example.com
+  http://FARABI-SERVER-IP
 
 تنبيه:
 
 الحزم ZIP السابقة موجودة للرجوع فقط، وليست حزمة التنزيل الإنتاجية الحالية بعد اعتماد Windows Service Installer.
+
+
+ملاحظة قابلية النقل:
+لا تعتمد نسخة GitHub على IP ثابت. عند تثبيت Agent على جهاز مستخدم جديد، يجب ضبط رابط فارابي الفعلي داخل ملف إعدادات Agent باستخدام سكربت:
+Configure-SurhanScannerAgent.ps1
+
+أمثلة لرابط فارابي:
+https://farabi.example.com
+http://FARABI-SERVER-IP

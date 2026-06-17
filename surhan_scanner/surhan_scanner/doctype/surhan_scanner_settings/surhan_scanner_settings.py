@@ -20,6 +20,8 @@ class SurhanScannerSettings(Document):
             or "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe"
         )
         self.agent_latest_version = self.agent_latest_version or "1.0.0"
+        self.farabi_base_url = (self.farabi_base_url or "").strip()
+        self.agent_allowed_farabi_origins = (self.agent_allowed_farabi_origins or "").strip()
         self.agent_version_check_url = (
             self.agent_version_check_url
             or "/assets/surhan_scanner/agent/version.json"

@@ -71,6 +71,8 @@ def create_default_settings():
             "agent_allowed_file_types": "pdf,jpg,jpeg,png,tif,tiff",
             "agent_download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe",
             "agent_latest_version": "1.0.0",
+            "farabi_base_url": "",
+            "agent_allowed_farabi_origins": "",
             "agent_version_check_url": "/assets/surhan_scanner/agent/version.json",
             "show_agent_install_dialog": 1,
             "max_upload_size_mb": 100,
