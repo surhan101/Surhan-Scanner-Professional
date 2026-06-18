@@ -437,6 +437,77 @@ surhan_scanner.manager = {
                     color: #166534;
                 }
 
+
+                .surhan-scanner-agent-dialog .modal-dialog {
+                    width: calc(100vw - 70px);
+                    max-width: 1500px;
+                }
+
+                .surhan-scanner-agent-dialog .modal-content {
+                    min-height: calc(100vh - 70px);
+                }
+
+                .surhan-scanner-agent-dialog .modal-body {
+                    max-height: calc(100vh - 145px);
+                    overflow: auto;
+                }
+
+                .surhan-pro-workspace {
+                    display: grid;
+                    grid-template-columns: minmax(760px, 1fr) minmax(320px, 420px);
+                    gap: 14px;
+                    align-items: start;
+                    direction: ltr;
+                }
+
+                .surhan-pro-preview-column,
+                .surhan-pro-device-column {
+                    direction: rtl;
+                }
+
+                .surhan-pro-page-viewer {
+                    min-height: 560px;
+                    border: 1px dashed #d1d5db;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 12px;
+                    background: #ffffff;
+                    overflow: auto;
+                    text-align: center;
+                }
+
+                .surhan-pro-page-viewer img,
+                .surhan-pro-page-viewer iframe {
+                    width: 100%;
+                    max-width: 100%;
+                    max-height: 560px;
+                    border: 0;
+                }
+
+                .surhan-pro-page-nav {
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                    justify-content: center;
+                    margin-top: 10px;
+                }
+
+                .surhan-pro-report {
+                    margin-top: 10px;
+                }
+
+                .surhan-pro-hidden-setting {
+                    display: none !important;
+                }
+
+                @media (max-width: 992px) {
+                    .surhan-pro-workspace {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
                 @media (max-width: 992px) {
                     .surhan-pro-grid {
                         grid-template-columns: 1fr;
@@ -462,83 +533,109 @@ surhan_scanner.manager = {
                     </div>
                 </div>
 
-                <div class="surhan-pro-grid">
-                    <div class="surhan-pro-card">
-                        <h4>الجهاز</h4>
+                <div class="surhan-pro-workspace">
+                    <div class="surhan-pro-preview-column">
+                        <div class="surhan-pro-card">
+                            <h4>الأوراق الممسوحة</h4>
 
-                        <div class="surhan-pro-field">
-                            <label>جهاز الاسكانر</label>
-                            <select id="surhan_agent_device">
-                                <option value="">جاري تحميل الأجهزة...</option>
-                            </select>
-                        </div>
+                            <div class="surhan-pro-page-viewer" id="surhan_agent_page_viewer">
+                                لا توجد أوراق ممسوحة حاليًا.
+                            </div>
 
-                        <div class="surhan-pro-actions">
-                            <button type="button" class="btn btn-sm btn-default" id="surhan_agent_refresh_devices">
-                                تحديث الأجهزة
-                            </button>
-                            <button type="button" class="btn btn-sm btn-default" id="surhan_agent_health_check">
-                                فحص Agent
-                            </button>
-                        </div>
-                    </div>
+                            <div class="surhan-pro-page-nav">
+                                <button type="button" class="btn btn-sm btn-default" id="surhan_agent_page_prev">
+                                    السابق
+                                </button>
+                                <span id="surhan_agent_page_counter">0 / 0</span>
+                                <button type="button" class="btn btn-sm btn-default" id="surhan_agent_page_next">
+                                    التالي
+                                </button>
+                            </div>
 
-                    <div class="surhan-pro-card">
-                        <h4>إعدادات المسح</h4>
+                            <div class="surhan-pro-report">
+                                <h4>تقرير المسح</h4>
+                                <div class="surhan-pro-preview" id="surhan_agent_preview">
+                                    لا توجد عملية مسح حالية.
+                                </div>
+                            </div>
 
-                        <div class="surhan-pro-field">
-                            <label>مصدر الورق</label>
-                            <select id="surhan_agent_paper_source">
-                                <option value="Feeder">Feeder</option>
-                                <option value="Flatbed">Flatbed</option>
-                                <option value="Auto">Auto</option>
-                            </select>
-                        </div>
+                            <div class="surhan-pro-status warning" id="surhan_agent_status">
+                                جاري تجهيز بيئة المسح...
+                            </div>
 
-                        <div class="surhan-pro-field">
-                            <label>الألوان</label>
-                            <select id="surhan_agent_pixel_type">
-                                <option value="Color">Color</option>
-                                <option value="Gray">Gray</option>
-                                <option value="Black & White">Black & White</option>
-                            </select>
-                        </div>
-
-                        <div class="surhan-pro-field">
-                            <label>الدقة</label>
-                            <select id="surhan_agent_resolution">
-                                <option value="200">200 DPI</option>
-                                <option value="300">300 DPI</option>
-                                <option value="600">600 DPI</option>
-                            </select>
+                            <div class="surhan-pro-progress">
+                                <div class="surhan-pro-progress-bar" id="surhan_agent_progress"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="surhan-pro-card">
-                        <h4>الملف والجلسة</h4>
+                    <div class="surhan-pro-device-column">
+                        <div class="surhan-pro-card">
+                            <h4>الجهاز</h4>
 
-                        <div class="surhan-pro-field">
-                            <label>نوع الملف</label>
-                            <select id="surhan_agent_file_type">
-                                <option value="jpg">JPG</option>
-                                <option value="pdf">PDF</option>
-                            </select>
-                        </div>
+                            <div class="surhan-pro-field">
+                                <label>جهاز الاسكانر</label>
+                                <select id="surhan_agent_device">
+                                    <option value="">جاري تحميل الأجهزة...</option>
+                                </select>
+                            </div>
 
-                        <div class="surhan-pro-field">
-                            <label>نمط الدفعة</label>
-                            <select id="surhan_agent_batch_mode">
-                                <option value="Single Page">Single Page</option>
-                                <option value="Multi Page">Multi Page</option>
-                                <option value="Continuous Batch">Continuous Batch</option>
-                            </select>
-                        </div>
+                            <div class="surhan-pro-actions">
+                                <button type="button" class="btn btn-sm btn-default" id="surhan_agent_refresh_devices">
+                                    تحديث الأجهزة
+                                </button>
+                                <button type="button" class="btn btn-sm btn-default" id="surhan_agent_health_check">
+                                    فحص Agent
+                                </button>
+                            </div>
 
-                        <div class="surhan-pro-field">
-                            <label>أقصى عدد صفحات</label>
-                            <input type="number" id="surhan_agent_max_pages" min="1" max="1000" value="1">
+                            <div class="surhan-pro-field">
+                                <label>الألوان</label>
+                                <select id="surhan_agent_pixel_type">
+                                    <option value="Color">Color</option>
+                                    <option value="Gray">Gray</option>
+                                    <option value="Black & White">Black & White</option>
+                                </select>
+                            </div>
+
+                            <label class="surhan-pro-check">
+                                <input type="checkbox" id="surhan_agent_duplex">
+                                <span>مسح الوجهين Duplex</span>
+                            </label>
                         </div>
                     </div>
+                </div>
+
+                <div class="surhan-pro-hidden-setting" aria-hidden="true">
+                    <select id="surhan_agent_paper_source">
+                        <option value="Feeder">Feeder</option>
+                        <option value="Flatbed">Flatbed</option>
+                        <option value="Auto">Auto</option>
+                    </select>
+
+                    <select id="surhan_agent_resolution">
+                        <option value="200">200 DPI</option>
+                        <option value="300">300 DPI</option>
+                        <option value="600">600 DPI</option>
+                    </select>
+
+                    <select id="surhan_agent_file_type">
+                        <option value="jpg">JPG</option>
+                        <option value="pdf">PDF</option>
+                    </select>
+
+                    <select id="surhan_agent_batch_mode">
+                        <option value="Single Page">Single Page</option>
+                        <option value="Multi Page">Multi Page</option>
+                        <option value="Continuous Batch">Continuous Batch</option>
+                    </select>
+
+                    <input type="number" id="surhan_agent_max_pages" min="1" max="1000" value="1">
+
+                    <input type="checkbox" id="surhan_agent_use_feeder" checked>
+                    <input type="checkbox" id="surhan_agent_multi_page">
+                    <input type="checkbox" id="surhan_agent_silent_scan" checked>
+                    <input type="checkbox" id="surhan_agent_show_preview" checked>
                 </div>
 
                 <div class="surhan-pro-card" id="surhan_barcode_card" style="margin-top:12px;display:none;">
@@ -558,52 +655,14 @@ surhan_scanner.manager = {
                     </div>
                 </div>
 
-                <div class="surhan-pro-card" style="margin-top:12px;">
-                    <h4>خيارات متقدمة</h4>
 
-                    <label class="surhan-pro-check">
-                        <input type="checkbox" id="surhan_agent_use_feeder" checked>
-                        <span>استخدام Feeder</span>
-                    </label>
-
-                    <label class="surhan-pro-check">
-                        <input type="checkbox" id="surhan_agent_duplex">
-                        <span>مسح الوجهين Duplex</span>
-                    </label>
-
-                    <label class="surhan-pro-check">
-                        <input type="checkbox" id="surhan_agent_multi_page">
-                        <span>متعدد الصفحات</span>
-                    </label>
-
-                    <label class="surhan-pro-check">
-                        <input type="checkbox" id="surhan_agent_silent_scan" checked>
-                        <span>مسح صامت بدون نافذة Windows قدر الإمكان</span>
-                    </label>
-
-                    <label class="surhan-pro-check">
-                        <input type="checkbox" id="surhan_agent_show_preview" checked>
-                        <span>إظهار ملخص بعد المسح</span>
-                    </label>
-                </div>
-
-                <div class="surhan-pro-status warning" id="surhan_agent_status">
-                    جاري تجهيز بيئة المسح...
-                </div>
-
-                <div class="surhan-pro-progress">
-                    <div class="surhan-pro-progress-bar" id="surhan_agent_progress"></div>
-                </div>
-
-                <div class="surhan-pro-preview" id="surhan_agent_preview">
-                    لا توجد عملية مسح حالية.
-                </div>
             </div>
         `;
 
         this.agent_dialog.fields_dict.scanner_html.$wrapper.html(html);
 
         const wrapper = this.agent_dialog.fields_dict.scanner_html.$wrapper;
+        this.agent_dialog.$wrapper.addClass("surhan-scanner-agent-dialog");
 
         wrapper.find("#surhan_agent_refresh_devices").on("click", () => {
             this.refresh_agent_devices();
@@ -611,6 +670,14 @@ surhan_scanner.manager = {
 
         wrapper.find("#surhan_agent_health_check").on("click", () => {
             this.check_agent_and_load_devices();
+        });
+
+        wrapper.find("#surhan_agent_page_prev").on("click", () => {
+            this.move_agent_preview_page(-1);
+        });
+
+        wrapper.find("#surhan_agent_page_next").on("click", () => {
+            this.move_agent_preview_page(1);
         });
 
         wrapper.find("#surhan_agent_batch_mode").on("change", () => {
@@ -1006,27 +1073,60 @@ surhan_scanner.manager = {
     },
 
     collect_agent_options: function () {
+        const settings = this.current_settings || {};
         const rule = this.current_rule || {};
-        const health = this.agent_health || {};
-        const version = health.version || "0.0.0";
-        const is_enterprise_agent = this.compare_versions(version, "1.0.0") >= 0;
 
-        const batch_mode = $("#surhan_agent_batch_mode").val() || "Single Page";
-        const multi_page_from_batch = batch_mode !== "Single Page";
+        const rule_value = (fieldname, fallback_value) => {
+            const value = rule[fieldname];
+            if (value !== undefined && value !== null && value !== "") {
+                return value;
+            }
+            return fallback_value;
+        };
 
-        let selected_file_type = ($("#surhan_agent_file_type").val() || "jpg").toLowerCase();
-        let selected_batch_mode = batch_mode;
-        let selected_multi_page = ($("#surhan_agent_multi_page").is(":checked") || multi_page_from_batch) ? 1 : 0;
-        let selected_duplex = $("#surhan_agent_duplex").is(":checked") ? 1 : 0;
-        let selected_max_pages = this.as_int($("#surhan_agent_max_pages").val(), 1, 1, 1000);
+        const selected_file_type = String(
+            rule_value("file_type", this.get_file_type(settings, rule) || "jpg")
+        ).toLowerCase();
 
-        if (!is_enterprise_agent) {
-            selected_file_type = "jpg";
-            selected_batch_mode = "Single Page";
-            selected_multi_page = 0;
-            selected_duplex = 0;
-            selected_max_pages = 1;
-        }
+        const selected_resolution = this.as_int(
+            rule_value("resolution", this.get_resolution(settings, rule) || 200),
+            200,
+            75,
+            1200
+        );
+
+        const selected_paper_source = String(
+            rule_value("paper_source", settings.default_paper_source || "Feeder")
+        );
+
+        const selected_batch_mode = String(
+            rule_value("scan_batch_mode", settings.default_scan_batch_mode || "Single Page")
+        );
+
+        const selected_max_pages = this.as_int(
+            rule_value("max_pages", settings.default_max_pages || 1),
+            1,
+            1,
+            1000
+        );
+
+        const selected_use_feeder = this.as_bool(
+            rule_value("use_feeder", true),
+            true
+        ) ? 1 : 0;
+
+        const selected_multi_page = (
+            this.as_bool(rule_value("multi_page", false), false) ||
+            selected_batch_mode !== "Single Page"
+        ) ? 1 : 0;
+
+        const silent_default =
+            rule.silent_scan !== undefined && rule.silent_scan !== null
+                ? rule.silent_scan
+                : settings.enable_silent_scan;
+
+        const selected_silent_scan = this.as_bool(silent_default, true) ? 1 : 0;
+        const selected_show_preview = this.as_bool(rule_value("show_preview", true), true) ? 1 : 0;
 
         const barcode_field = rule.barcode_field || "";
         const barcode_value = barcode_field ? ($("#surhan_barcode_value").val() || "") : "";
@@ -1035,19 +1135,20 @@ surhan_scanner.manager = {
             this.set_barcode_value_on_form(barcode_value);
         }
 
-        return {
+        const options = {
+            // مسموح تغييره من الديالوق فقط
             scanner_name: $("#surhan_agent_device").val() || rule.agent_scanner_name || "",
+            pixel_type: $("#surhan_agent_pixel_type").val() || rule_value("pixel_type", this.get_pixel_type(settings, rule) || "Color"),
+            duplex: $("#surhan_agent_duplex").is(":checked") ? 1 : 0,
+
+            // من الـ Rule فقط
             file_type: selected_file_type,
-            resolution: this.as_int($("#surhan_agent_resolution").val(), 200, 75, 1200),
-            pixel_type: $("#surhan_agent_pixel_type").val() || "Color",
-            paper_source: $("#surhan_agent_paper_source").val() || "Feeder",
-
-            use_feeder: $("#surhan_agent_use_feeder").is(":checked") ? 1 : 0,
-            duplex: selected_duplex,
+            resolution: selected_resolution,
+            paper_source: selected_paper_source,
+            use_feeder: selected_use_feeder,
             multi_page: selected_multi_page,
-            silent_scan: $("#surhan_agent_silent_scan").is(":checked") ? 1 : 0,
-            show_preview: $("#surhan_agent_show_preview").is(":checked") ? 1 : 0,
-
+            silent_scan: selected_silent_scan,
+            show_preview: selected_show_preview,
             scan_batch_mode: selected_batch_mode,
             max_pages: selected_max_pages,
             upload_strategy: rule.upload_strategy || "Direct Upload",
@@ -1056,6 +1157,9 @@ surhan_scanner.manager = {
             barcode_value: barcode_value,
             barcode_source: rule.barcode_source || ""
         };
+
+        console.log("Surhan Effective Scan Options:", options);
+        return options;
     },
 
     call_local_agent_scan: function (agent_url, session, settings, rule, options) {
@@ -1136,9 +1240,8 @@ surhan_scanner.manager = {
 
                 this.active_scan = false;
 
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1200);
+                // Phase 41: keep the scanner dialog open after success.
+                // The user closes it manually.
             })
             .catch((error) => {
                 console.error("Surhan Agent Error:", error);
@@ -1158,6 +1261,105 @@ surhan_scanner.manager = {
             });
     },
 
+    extract_agent_preview_pages: function (data) {
+        if (!data) {
+            return [];
+        }
+
+        const candidates = [
+            data.pages,
+            data.preview_pages,
+            data.scanned_pages,
+            data.images,
+            data.files
+        ];
+
+        for (const candidate of candidates) {
+            if (Array.isArray(candidate) && candidate.length) {
+                return candidate;
+            }
+        }
+
+        return [];
+    },
+
+    set_agent_preview_pages: function (pages, total_pages) {
+        this.agent_preview_pages = Array.isArray(pages) ? pages : [];
+        this.agent_preview_total_pages = total_pages || this.agent_preview_pages.length || 0;
+        this.agent_preview_page_index = 0;
+        this.render_agent_preview_page();
+    },
+
+    move_agent_preview_page: function (delta) {
+        const total = this.agent_preview_total_pages || 0;
+        if (!total) {
+            return;
+        }
+
+        const max_index = total - 1;
+        const current = this.agent_preview_page_index || 0;
+        this.agent_preview_page_index = Math.max(0, Math.min(max_index, current + delta));
+        this.render_agent_preview_page();
+    },
+
+    render_agent_preview_page: function () {
+        const viewer = $("#surhan_agent_page_viewer");
+        const counter = $("#surhan_agent_page_counter");
+        const prev_btn = $("#surhan_agent_page_prev");
+        const next_btn = $("#surhan_agent_page_next");
+
+        if (!viewer.length) {
+            return;
+        }
+
+        const pages = this.agent_preview_pages || [];
+        const total = this.agent_preview_total_pages || pages.length || 0;
+        let index = this.agent_preview_page_index || 0;
+
+        if (!total) {
+            viewer.html("لا توجد أوراق ممسوحة حاليًا.");
+            counter.text("0 / 0");
+            prev_btn.prop("disabled", true);
+            next_btn.prop("disabled", true);
+            return;
+        }
+
+        if (index >= total) {
+            index = total - 1;
+            this.agent_preview_page_index = index;
+        }
+
+        const page = pages[index] || {};
+        let page_url =
+            page.url ||
+            page.file_url ||
+            page.preview_url ||
+            page.image_url ||
+            page.thumbnail_url ||
+            "";
+
+        if (page_url) {
+            const is_pdf = String(page_url).toLowerCase().includes(".pdf");
+            if (is_pdf) {
+                const page_number = page.page_number || (index + 1);
+                page_url = String(page_url).split("#")[0] + "#page=" + String(page_number) + "&view=FitH";
+            }
+
+            const escaped_url = this.escape_html(page_url);
+            if (is_pdf) {
+                viewer.html('<iframe src="' + escaped_url + '" style="width:100%;height:560px;border:0;"></iframe>');
+            } else {
+                viewer.html('<img src="' + escaped_url + '" alt="Scanned Page">');
+            }
+        } else {
+            viewer.html("تم مسح الصفحة " + String(index + 1) + " من " + String(total));
+        }
+
+        counter.text(String(index + 1) + " / " + String(total));
+        prev_btn.prop("disabled", index <= 0);
+        next_btn.prop("disabled", index >= total - 1);
+    },
+
     show_agent_upload_result: function (data) {
         const file_name =
             data.file_name ||
@@ -1165,6 +1367,38 @@ surhan_scanner.manager = {
             "scan file";
 
         const file_size = data.file_size || (data.file && data.file.file_size) || "";
+
+        const file_url =
+            data.file_url ||
+            (data.file && data.file.file_url) ||
+            (data.upload && data.upload.file_url) ||
+            "";
+
+        const total_pages =
+            data.page_count ||
+            data.pages_count ||
+            data.total_pages ||
+            data.scanned_page_count ||
+            0;
+
+        let pages = this.extract_agent_preview_pages(data);
+
+        // Agent يرجع غالبًا PDF واحد + عدد الصفحات.
+        // هنا نحول الـ PDF إلى صفحات قابلة للتنقل داخل نفس مربع العرض.
+        if ((!pages || !pages.length) && file_url) {
+            const count = this.as_int(total_pages, 1, 1, 2000);
+            pages = [];
+
+            for (let i = 1; i <= count; i++) {
+                pages.push({
+                    file_url: file_url,
+                    page_number: i,
+                    is_pdf_page: String(file_url).toLowerCase().includes(".pdf")
+                });
+            }
+        }
+
+        this.set_agent_preview_pages(pages, total_pages || pages.length || 0);
 
         let html =
             "<b>تم رفع الملف بنجاح</b><br>" +
@@ -1174,10 +1408,7 @@ surhan_scanner.manager = {
             html += "<br>الحجم: " + this.format_file_size(file_size);
         }
 
-        if (data.scan_session_id) {
-            html += "<br>رقم الجلسة: " + this.escape_html(data.scan_session_id);
-        }
-
+        // Phase 41C: إخفاء رقم الجلسة من تقرير المسح حسب الطلب.
         $("#surhan_agent_preview").html(html);
     },
 
