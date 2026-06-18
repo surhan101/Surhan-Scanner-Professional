@@ -682,19 +682,109 @@ def _validate_target_doc(doctype, docname, permission_type="write"):
     return doc
 
 
-def _validate_attach_field(doctype, attach_field):
-    """يتحقق أن حقل الإرفاق موجود ونوعه صحيح."""
+def _split_child_attach_field(attach_field):
+    value = str(attach_field or "").strip()
+    if "." not in value:
+        return value, ""
+
+    table_field, child_field = value.split(".", 1)
+    return table_field.strip(), child_field.strip()
+
+
+def _first_child_attach_field(child_meta):
+    if child_meta.get_field("attachment_file") and child_meta.get_field("attachment_file").fieldtype in ["Attach", "Attach Image"]:
+        return "attachment_file"
+
+    for child_df in child_meta.fields:
+        if child_df.fieldname and child_df.fieldtype in ["Attach", "Attach Image"]:
+            return child_df.fieldname
+
+    return ""
+
+
+def _resolve_attach_target(doctype, attach_field):
+    """Resolve a direct Attach field or a child-table Attach target.
+
+    Supported values:
+    - direct_attach_field
+    - child_table_field
+    - child_table_field.child_attach_field
+    """
     if not attach_field:
-        return
+        return None
 
     meta = frappe.get_meta(doctype)
-    df = meta.get_field(attach_field)
+    table_field, child_attach_field = _split_child_attach_field(attach_field)
 
+    df = meta.get_field(table_field)
     if not df:
         frappe.throw(_("Attach field does not exist: {0}").format(attach_field))
 
-    if df.fieldtype not in ["Attach", "Attach Image", "Table"]:
+    if df.fieldtype in ["Attach", "Attach Image"] and not child_attach_field:
+        return {
+            "mode": "direct",
+            "attach_field": table_field,
+            "df": df,
+        }
+
+    if df.fieldtype != "Table":
         frappe.throw(_("Target field must be Attach, Attach Image, or Table"))
+
+    child_doctype = df.options
+    if not child_doctype:
+        frappe.throw(_("Table field has no child doctype: {0}").format(table_field))
+
+    child_meta = frappe.get_meta(child_doctype)
+
+    if child_attach_field:
+        child_df = child_meta.get_field(child_attach_field)
+        if not child_df:
+            frappe.throw(_("Child attach field does not exist: {0}").format(attach_field))
+        if child_df.fieldtype not in ["Attach", "Attach Image"]:
+            frappe.throw(_("Child field must be Attach or Attach Image: {0}").format(attach_field))
+    else:
+        child_attach_field = _first_child_attach_field(child_meta)
+        if not child_attach_field:
+            frappe.throw(_("No Attach field found inside child table: {0}").format(child_doctype))
+        child_df = child_meta.get_field(child_attach_field)
+
+    return {
+        "mode": "child_table",
+        "table_field": table_field,
+        "child_doctype": child_doctype,
+        "child_attach_field": child_attach_field,
+        "df": df,
+        "child_df": child_df,
+    }
+
+
+def _validate_attach_field(doctype, attach_field):
+    """Validate direct Attach fields and child-table Attach targets."""
+    if not attach_field:
+        return
+
+    _resolve_attach_target(doctype, attach_field)
+
+
+def _get_file_doc_attach_field_for_save(doctype, attach_field):
+    """Return df value suitable for Frappe save_file.
+
+    For child table targets we return None because the actual child row is
+    appended after the File document is created.
+    """
+    if not attach_field:
+        return None
+
+    try:
+        target = _resolve_attach_target(doctype, attach_field)
+    except Exception:
+        return None
+
+    if target and target.get("mode") == "direct":
+        return target.get("attach_field")
+
+    return None
+
 
 
 def _validate_barcode_field(doctype, barcode_field):
@@ -811,28 +901,69 @@ def _normalize_custom_scan_filename(file_name):
     return file_name[:140]
 
 
-def _build_scan_filename(original_filename, custom_file_name=None):
-    """
-    يبني اسم الملف النهائي.
-    إذا وُجد custom_file_name من manager، يتم استخدامه كاسم أساسي
-    مع الحفاظ على امتداد الملف الأصلي.
+def _safe_scan_filename_part(value, default="item", max_length=60):
+    value = _safe_filename(str(value or default))
+    value = value.replace(" ", "-").replace("/", "-").replace("\\", "-")
+    value = value.strip("._-")
+    return (value or default)[:max_length]
+
+
+def _build_default_scan_filename(original_filename, session_data=None):
+    session_data = session_data or {}
+
+    extension = _get_extension(original_filename) or "pdf"
+
+    doctype_part = _safe_scan_filename_part(
+        session_data.get("doctype"),
+        "Doctype",
+        40,
+    )
+    docname_part = _safe_scan_filename_part(
+        session_data.get("docname"),
+        "Document",
+        70,
+    )
+    user_part = _safe_scan_filename_part(
+        session_data.get("user") or frappe.session.user,
+        "user",
+        50,
+    )
+    date_part = now_datetime().strftime("%y%m%d_%H%M")
+
+    return "{0}_{1}_{2}_{3}.{4}".format(
+        doctype_part,
+        docname_part,
+        user_part,
+        date_part,
+        extension,
+    )
+
+
+def _build_scan_filename(original_filename, custom_file_name=None, session_data=None):
+    """Build the final scan file name.
+
+    Default format:
+    Doctype_Docname_User_YYMMDD_HHMM.ext
+
+    If custom_file_name is provided by an authorized manager, it is used as
+    the base name while preserving the detected/original extension.
     """
     original_filename = _safe_filename(original_filename)
+
     if not custom_file_name:
-        return original_filename
+        return _build_default_scan_filename(original_filename, session_data=session_data)
 
     custom_file_name = _normalize_custom_scan_filename(custom_file_name)
     if not custom_file_name:
-        return original_filename
+        return _build_default_scan_filename(original_filename, session_data=session_data)
 
     original_ext = _get_extension(original_filename)
     custom_base = custom_file_name.rsplit(".", 1)[0] if "." in custom_file_name else custom_file_name
 
     if original_ext:
-        return f"{custom_base}.{original_ext}"
+        return "{0}.{1}".format(custom_base, original_ext)
 
     return custom_base
-
 
 def _detect_file_type_from_magic_bytes(content):
     """يكتشف نوع الملف الحقيقي من magic bytes."""
@@ -2356,76 +2487,81 @@ def _safe_update_target_fields(doctype, docname, updates, max_retries=3):
     return False
 
 
+def _set_child_table_scan_defaults(row, child_meta, file_url, file_name=None):
+    """Fill common required/default fields in child attachment rows."""
+    for child_df in child_meta.fields:
+        fieldname = child_df.fieldname
+        if not fieldname or row.get(fieldname):
+            continue
+
+        if child_df.fieldtype in ["Attach", "Attach Image"]:
+            continue
+
+        if fieldname in ["attachment_count", "count", "qty", "quantity"]:
+            row.set(fieldname, 1)
+            continue
+
+        if fieldname in ["attachment_description", "description", "remarks"]:
+            row.set(fieldname, file_name or file_url)
+            continue
+
+        if fieldname in ["attachment_no", "reference", "reference_no"]:
+            row.set(fieldname, file_name or "")
+            continue
+
+        if not cint(getattr(child_df, "reqd", 0)):
+            continue
+
+        if child_df.fieldtype == "Select":
+            options = [
+                option.strip()
+                for option in str(child_df.options or "").split("\n")
+                if option.strip()
+            ]
+            if options:
+                row.set(fieldname, options[0])
+
+        elif child_df.fieldtype in ["Data", "Small Text", "Text"]:
+            row.set(fieldname, "Scanned")
+
+        elif child_df.fieldtype in ["Int", "Long Int"]:
+            row.set(fieldname, 1)
+
+        elif child_df.fieldtype in ["Float", "Currency", "Percent"]:
+            row.set(fieldname, 1)
+
+        elif child_df.fieldtype == "Check":
+            row.set(fieldname, 0)
+
+        elif child_df.fieldtype == "Date":
+            row.set(fieldname, now_datetime().date())
+
+
 def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, file_name=None, max_retries=3):
-    """
-    يربط الملف بالمستند الهدف بطريقة آمنة.
-
-    يدعم حالتين:
-    1) حقل Attach / Attach Image مباشر:
-       يتم تحديث الحقل مباشرة بقيمة file_url.
-
-    2) حقل Table:
-       يتم إنشاء صف جديد داخل Child Table، ثم تعبئة أول حقل Attach/Attach Image داخل الجدول.
-    """
+    """Attach uploaded scan to a direct Attach field or append a child-table row."""
     if not doctype or not docname or not attach_field or not file_url:
         return True, ""
 
     try:
-        meta = frappe.get_meta(doctype)
-        df = meta.get_field(attach_field)
+        target = _resolve_attach_target(doctype, attach_field)
 
-        if not df:
-            return False, f"Attach field does not exist: {attach_field}"
-
-        # الحالة الأولى: حقل Attach مباشر
-        if df.fieldtype in ["Attach", "Attach Image"]:
+        if target.get("mode") == "direct":
             ok = _safe_update_target_attach_field(
                 doctype=doctype,
                 docname=docname,
-                attach_field=attach_field,
+                attach_field=target.get("attach_field"),
                 file_url=file_url,
                 max_retries=max_retries,
             )
             return ok, "" if ok else "Could not update attach field"
 
-        # الحالة الثانية: يجب أن يكون Table
-        if df.fieldtype != "Table":
-            return False, f"Unsupported attach field type: {df.fieldtype}"
+        if target.get("mode") != "child_table":
+            return False, "Unsupported attach target"
 
-        child_doctype = df.options
-        if not child_doctype:
-            return False, f"Table field has no child doctype: {attach_field}"
-
+        table_field = target.get("table_field")
+        child_doctype = target.get("child_doctype")
+        child_attach_field = target.get("child_attach_field")
         child_meta = frappe.get_meta(child_doctype)
-
-        attach_child_field = None
-
-        # أسماء مفضلة إن وجدت
-        preferred_fields = [
-            "attachment_file",
-            "file",
-            "file_url",
-            "attach",
-            "attachment",
-            "scan_file",
-            "document",
-        ]
-
-        for fieldname in preferred_fields:
-            child_df = child_meta.get_field(fieldname)
-            if child_df and child_df.fieldtype in ["Attach", "Attach Image"]:
-                attach_child_field = fieldname
-                break
-
-        # fallback: أول حقل Attach/Attach Image داخل الجدول
-        if not attach_child_field:
-            for child_df in child_meta.fields:
-                if child_df.fieldname and child_df.fieldtype in ["Attach", "Attach Image"]:
-                    attach_child_field = child_df.fieldname
-                    break
-
-        if not attach_child_field:
-            return False, f"No Attach field found inside child table: {child_doctype}"
 
         last_error = None
 
@@ -2434,21 +2570,14 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
                 doc = frappe.get_doc(doctype, docname)
                 doc.check_permission("write")
 
-                row = doc.append(attach_field, {})
-                row.set(attach_child_field, file_url)
-
-                # حقول وصفية اختيارية إن كانت موجودة في Child Table
-                if child_meta.get_field("description"):
-                    row.set("description", file_name or file_url)
-
-                if child_meta.get_field("attachment_no"):
-                    row.set("attachment_no", file_name or "")
-
-                if child_meta.get_field("file_name"):
-                    row.set("file_name", file_name or "")
-
-                if child_meta.get_field("title"):
-                    row.set("title", file_name or file_url)
+                row = doc.append(table_field, {})
+                row.set(child_attach_field, file_url)
+                _set_child_table_scan_defaults(
+                    row=row,
+                    child_meta=child_meta,
+                    file_url=file_url,
+                    file_name=file_name,
+                )
 
                 doc.save(ignore_permissions=False)
                 return True, ""
@@ -2464,9 +2593,8 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
         frappe.log_error(
             title="Surhan Scanner Child Table Attach Failed",
             message=(
-                f"doctype={doctype}, docname={docname}, table_field={attach_field}, "
-                f"child_doctype={child_doctype}, child_attach_field={attach_child_field}, "
-                f"file_url={file_url}, error={last_error}"
+                f"doctype={doctype}, docname={docname}, table_field={table_field}, "
+                f"child_attach_field={child_attach_field}, file_url={file_url}, error={last_error}"
             ),
         )
         return False, str(last_error)
@@ -2562,8 +2690,11 @@ def _upload_agent_scan(scan_token=None, filename=None, file_content=None):
             file_name = _safe_filename(uploaded_file.filename)
 
             custom_file_name = session_data.get("custom_file_name")
-            if custom_file_name:
-                file_name = _build_scan_filename(file_name, custom_file_name)
+            file_name = _build_scan_filename(
+                file_name,
+                custom_file_name,
+                session_data=session_data,
+            )
 
             try:
                 temp_result = _read_uploaded_stream_to_temp(
@@ -2581,8 +2712,11 @@ def _upload_agent_scan(scan_token=None, filename=None, file_content=None):
             file_name = _safe_filename(filename)
 
             custom_file_name = session_data.get("custom_file_name")
-            if custom_file_name:
-                file_name = _build_scan_filename(file_name, custom_file_name)
+            file_name = _build_scan_filename(
+                file_name,
+                custom_file_name,
+                session_data=session_data,
+            )
 
             try:
                 decoded_content = base64.b64decode(file_content, validate=True)
@@ -2655,6 +2789,10 @@ def _upload_agent_scan(scan_token=None, filename=None, file_content=None):
             except Exception as exc:
                 return _response(400, False, str(exc))
 
+        file_doc_attach_field = None
+        if upload_mode in ["Both", "Set Attach Field"] and attach_field:
+            file_doc_attach_field = _get_file_doc_attach_field_for_save(doctype, attach_field)
+
         try:
             settings = _get_settings()
 
@@ -2664,7 +2802,7 @@ def _upload_agent_scan(scan_token=None, filename=None, file_content=None):
                     file_name=file_name,
                     doctype=doctype,
                     docname=docname,
-                    attach_field=attach_field if upload_mode in ["Both", "Set Attach Field"] else None,
+                    attach_field=file_doc_attach_field,
                     folder=folder,
                     is_private=is_private,
                     extension=extension,
@@ -2687,7 +2825,7 @@ def _upload_agent_scan(scan_token=None, filename=None, file_content=None):
                     folder=folder,
                     decode=False,
                     is_private=is_private,
-                    df=attach_field if upload_mode in ["Both", "Set Attach Field"] else None,
+                    df=file_doc_attach_field,
                 )
 
         except Exception as exc:

@@ -100,20 +100,50 @@ surhan_scanner.manager = {
             return;
         }
 
+        let added = 0;
+
         frm.meta.fields.forEach((df) => {
-            if (!df.fieldname || !["Attach", "Attach Image"].includes(df.fieldtype)) {
+            if (!df.fieldname) {
                 return;
             }
 
-            this.add_button_after_field(frm, df.fieldname, label, () => {
-                const field_rule = Object.assign({}, rule, {
-                    attach_field: df.fieldname,
-                    upload_mode: "Both"
+            if (["Attach", "Attach Image"].includes(df.fieldtype)) {
+                this.add_button_after_field(frm, df.fieldname, label, () => {
+                    const field_rule = Object.assign({}, rule, {
+                        attach_field: df.fieldname,
+                        upload_mode: "Both"
+                    });
+
+                    this.open(frm, settings, field_rule);
                 });
 
-                this.open(frm, settings, field_rule);
-            });
+                added++;
+                return;
+            }
+
+            if (df.fieldtype === "Table") {
+                this.add_button_after_field(frm, df.fieldname, label, () => {
+                    const field_rule = Object.assign({}, rule, {
+                        attach_field: df.fieldname,
+                        upload_mode: "Both"
+                    });
+
+                    this.open(frm, settings, field_rule);
+                });
+
+                added++;
+            }
         });
+
+        if (!added) {
+            frm.add_custom_button(
+                label,
+                () => {
+                    this.open(frm, settings, rule);
+                },
+                rule.button_group || "مرفقات"
+            );
+        }
     },
 
     add_button_after_field: function (frm, fieldname, label, handler) {

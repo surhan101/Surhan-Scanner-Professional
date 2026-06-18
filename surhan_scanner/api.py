@@ -383,16 +383,43 @@ def _get_scanner_config(doctype=None):
 
 
 @frappe.whitelist()
-def get_doctype_fields(*args, **kwargs):
-    require_scanner_access()
-    return _get_doctype_fields(*args, **kwargs)
+def get_doctype_fields(doctype=None, **kwargs):
+    """Return fields for Surhan Scanner Rule UI.
 
-def _get_doctype_fields(*args, **kwargs):
+    Frappe RPC may pass an internal "cmd" argument. This method accepts
+    **kwargs intentionally and ignores unknown RPC keys.
+    """
     require_scanner_access()
-    return _get_doctype_fields(*args, **kwargs)
+
+    kwargs.pop("cmd", None)
+
+    doctype = doctype or kwargs.get("doctype")
+    if not doctype:
+        frappe.throw("doctype is required")
+
+    return _get_doctype_fields(doctype)
+
+
+def _build_field_item(df, fieldname=None, label=None, fieldtype=None, **extra):
+    item = {
+        "fieldname": fieldname or df.fieldname,
+        "label": label or df.label or df.fieldname,
+        "fieldtype": fieldtype or df.fieldtype,
+    }
+
+    if getattr(df, "options", None):
+        item["options"] = df.options
+
+    item.update(extra)
+    return item
+
 
 def _get_doctype_fields(doctype):
     _require_scanner_user()
+
+    if not doctype:
+        frappe.throw("doctype is required")
+
     meta = frappe.get_meta(doctype)
 
     all_fields = []
@@ -403,24 +430,57 @@ def _get_doctype_fields(doctype):
         if not df.fieldname:
             continue
 
-        item = {
-            "fieldname": df.fieldname,
-            "label": df.label or df.fieldname,
-            "fieldtype": df.fieldtype
-        }
+        all_fields.append(_build_field_item(df))
 
-        all_fields.append(item)
+        if df.fieldtype in ["Attach", "Attach Image"]:
+            attach_fields.append(_build_field_item(df))
 
-        if df.fieldtype in ["Attach", "Attach Image", "Table"]:
-            attach_fields.append(item)
+        elif df.fieldtype == "Table":
+            table_item = _build_field_item(
+                df,
+                fieldtype="Table",
+                is_child_table=1,
+                child_doctype=df.options or "",
+            )
+            attach_fields.append(table_item)
+
+            if df.options:
+                try:
+                    child_meta = frappe.get_meta(df.options)
+                    for child_df in child_meta.fields:
+                        if not child_df.fieldname:
+                            continue
+
+                        if child_df.fieldtype in ["Attach", "Attach Image"]:
+                            child_label = "{0} → {1}".format(
+                                df.label or df.fieldname,
+                                child_df.label or child_df.fieldname,
+                            )
+                            attach_fields.append(
+                                _build_field_item(
+                                    child_df,
+                                    fieldname="{0}.{1}".format(df.fieldname, child_df.fieldname),
+                                    label=child_label,
+                                    fieldtype=child_df.fieldtype,
+                                    parent_fieldname=df.fieldname,
+                                    child_doctype=df.options,
+                                    child_fieldname=child_df.fieldname,
+                                    is_child_table_attach=1,
+                                )
+                            )
+                except Exception:
+                    frappe.log_error(
+                        frappe.get_traceback(),
+                        "Surhan Scanner Child Table Field Discovery Failed",
+                    )
 
         if df.fieldtype in ["Barcode", "Data", "Small Text"]:
-            barcode_fields.append(item)
+            barcode_fields.append(_build_field_item(df))
 
     return {
         "all_fields": all_fields,
         "attach_fields": attach_fields,
-        "barcode_fields": barcode_fields
+        "barcode_fields": barcode_fields,
     }
 
 

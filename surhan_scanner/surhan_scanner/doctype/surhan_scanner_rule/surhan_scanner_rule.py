@@ -19,46 +19,93 @@ class SurhanScannerRule(Document):
             )
 
     def validate_fields(self):
-        if not self.target_doctype:
+        """Validate Surhan Scanner Rule fields.
+
+        Supports:
+        - direct Attach fields, e.g. attachment
+        - table fields, e.g. attachments
+        - child table attach fields, e.g. attachments.attachment_type
+        """
+        target_doctype = getattr(self, "target_doctype", None) or getattr(self, "scanned_doctype", None)
+
+        if not target_doctype:
             return
 
-        meta = frappe.get_meta(self.target_doctype)
+        meta = frappe.get_meta(target_doctype)
 
-        if self.placement_type == "After Field":
-            if not self.target_field:
-                frappe.throw(
-                    _("Target Field is required when Placement Type is After Field")
-                )
+        if self.placement_type == "After Field" and not self.target_field:
+            frappe.throw(
+                _("Target Field is required when Placement Type is After Field")
+            )
 
-            if not meta.get_field(self.target_field):
+        if self.target_field:
+            target_df = meta.get_field(self.target_field)
+            if not target_df:
                 frappe.throw(
                     _("Target Field does not exist: {0}").format(self.target_field)
                 )
 
-        if self.placement_type == "All Attach Fields":
-            attach_fields = [
-                df.fieldname
-                for df in meta.fields
-                if df.fieldname and df.fieldtype in ["Attach", "Attach Image", "Table"]
-            ]
-
-            if not attach_fields:
-                frappe.throw(
-                    _("Target DocType has no Attach or Attach Image fields")
-                )
-
         if self.attach_field:
-            df = meta.get_field(self.attach_field)
+            self._validate_attach_field_for_rule(meta, self.attach_field)
 
-            if not df:
+        barcode_field = getattr(self, "barcode_field", None)
+        if barcode_field:
+            barcode_df = meta.get_field(barcode_field)
+            if not barcode_df:
                 frappe.throw(
-                    _("Attach Field does not exist: {0}").format(self.attach_field)
+                    _("Barcode Field does not exist: {0}").format(barcode_field)
                 )
 
-            if df.fieldtype not in ["Attach", "Attach Image", "Table"]:
+    def _validate_attach_field_for_rule(self, meta, attach_field):
+        attach_field = str(attach_field or "").strip()
+
+        if "." in attach_field:
+            table_field, child_field = attach_field.split(".", 1)
+            table_field = table_field.strip()
+            child_field = child_field.strip()
+
+            table_df = meta.get_field(table_field)
+            if not table_df:
                 frappe.throw(
-                    _("Attach Field must be Attach or Attach Image")
+                    _("Attach Table Field does not exist: {0}").format(table_field)
                 )
+
+            if table_df.fieldtype != "Table":
+                frappe.throw(
+                    _("Parent field must be a Table field: {0}").format(table_field)
+                )
+
+            if not table_df.options:
+                frappe.throw(
+                    _("Table field has no child doctype: {0}").format(table_field)
+                )
+
+            child_meta = frappe.get_meta(table_df.options)
+            child_df = child_meta.get_field(child_field)
+
+            if not child_df:
+                frappe.throw(
+                    _("Child Attach Field does not exist: {0}").format(attach_field)
+                )
+
+            if child_df.fieldtype not in ["Attach", "Attach Image"]:
+                frappe.throw(
+                    _("Child field must be Attach or Attach Image: {0}").format(attach_field)
+                )
+
+            return
+
+        df = meta.get_field(attach_field)
+        if not df:
+            frappe.throw(
+                _("Attach Field does not exist: {0}").format(attach_field)
+            )
+
+        if df.fieldtype not in ["Attach", "Attach Image", "Table"]:
+            frappe.throw(
+                _("Attach Field must be Attach, Attach Image, or Table: {0}").format(attach_field)
+            )
+
 
     def validate_numeric_options(self):
         if self.resolution is not None and int(self.resolution or 0) < 75:
