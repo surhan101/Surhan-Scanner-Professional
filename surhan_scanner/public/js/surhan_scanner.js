@@ -10,8 +10,38 @@ surhan_scanner.manager = {
     agent_health: null,
     active_scan: false,
 
+    client_can_use_scanner: function () {
+        const roles = window.frappe && frappe.user_roles ? frappe.user_roles : [];
+        const allowed_roles = [
+            "System Manager",
+            "Surhan Scanner Admin",
+            "Surhan Scanner Manager",
+            "Surhan Scanner User"
+        ];
+
+        return allowed_roles.some((role) => roles.includes(role));
+    },
+
+    disabled_config: function () {
+        return {
+            enabled: 0,
+            settings: {},
+            rules: []
+        };
+    },
+
     load_config: function (frm, callback) {
         if (!frm || !frm.doctype) {
+            return;
+        }
+
+        if (!this.client_can_use_scanner()) {
+            const data = this.disabled_config();
+            this.config_cache[frm.doctype] = data;
+
+            if (callback) {
+                callback(data);
+            }
             return;
         }
 
@@ -24,11 +54,20 @@ surhan_scanner.manager = {
 
         frappe.call({
             method: "surhan_scanner.api.get_scanner_config",
+            freeze: false,
             args: {
                 doctype: frm.doctype
             },
             callback: (r) => {
-                const data = r.message || {};
+                const data = r.message || this.disabled_config();
+                this.config_cache[frm.doctype] = data;
+
+                if (callback) {
+                    callback(data);
+                }
+            },
+            error: () => {
+                const data = this.disabled_config();
                 this.config_cache[frm.doctype] = data;
 
                 if (callback) {
@@ -43,9 +82,16 @@ surhan_scanner.manager = {
             return;
         }
 
-        if (frm.__surhan_scanner_loaded) {
+        if (!this.client_can_use_scanner()) {
+            frm.__surhan_scanner_checked = true;
             return;
         }
+
+        if (frm.__surhan_scanner_checked || frm.__surhan_scanner_loaded) {
+            return;
+        }
+
+        frm.__surhan_scanner_checked = true;
 
         this.load_config(frm, (config) => {
             if (!config || !config.enabled || !config.rules || !config.rules.length) {
@@ -1722,19 +1768,6 @@ surhan_scanner.manager = {
 
 
 (function () {
-
-    function schedule_apply() {
-        setTimeout(function () {
-            if (window.cur_frm && window.surhan_scanner?.manager) {
-                window.surhan_scanner.manager.apply_to_form(window.cur_frm);
-            }
-        }, 800);
+}, 800);
     }
-
-    $(document).on("form-refresh", schedule_apply);
-
-    $(document).ready(function () {
-        schedule_apply();
-    });
-
 })();

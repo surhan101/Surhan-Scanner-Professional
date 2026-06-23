@@ -98,20 +98,38 @@ def _get_password_value(doc, fieldname):
     return value or ""
 
 
+def _scanner_disabled_config():
+    return {
+        "enabled": 0,
+        "settings": {},
+        "rules": []
+    }
+
+
+def _has_scanner_config_access():
+    if frappe.session.user == "Guest":
+        return False
+
+    return _has_any_role([
+        "Surhan Scanner User",
+        "Surhan Scanner Manager",
+        "Surhan Scanner Admin",
+        "System Manager"
+    ])
+
+
 @frappe.whitelist()
 def get_scanner_config(*args, **kwargs):
-    require_scanner_access()
     kwargs = _clean_frappe_kwargs(kwargs)
-    return _get_scanner_config(*args, **kwargs)
 
-def _get_scanner_config(*args, **kwargs):
-    require_scanner_access()
-    kwargs = _clean_kwargs(kwargs)
-    kwargs = _clean_frappe_kwargs(kwargs)
-    return _get_scanner_config(*args, **kwargs)
+    if not _has_scanner_config_access():
+        return _scanner_disabled_config()
+
+    doctype = kwargs.get("doctype")
+    return _get_scanner_config(doctype=doctype)
+
 
 def _get_scanner_config(doctype=None):
-    _require_scanner_user()
     settings = frappe.get_single("Surhan Scanner Settings")
 
     if not settings.enabled:

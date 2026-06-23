@@ -12,4 +12,4 @@ def require_scanner_access():
     if "Surhan Scanner User" in roles:
         return
 
-    frappe.throw("غير مصرح لك باستخدام نظام الاسكانر")
+    frappe.throw("غير مصرح لك باستخدام نظام الاسكانر", frappe.PermissionError)
