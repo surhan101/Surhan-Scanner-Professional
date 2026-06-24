@@ -100,3 +100,13 @@ phase*_results/
 *_reports/
 *_audit/
 
+
+# Development backup files
+*.backup_*
+*.syntax_backup_*
+*.manual_syntax_fix_*
+*.force_remove_broken_tail_*
+*.pyc
+__pycache__/
+*.log
+.DS_Store

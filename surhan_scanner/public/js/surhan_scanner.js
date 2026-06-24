@@ -1003,25 +1003,172 @@ surhan_scanner.manager = {
         const select = $("#surhan_agent_device");
         select.empty();
 
-        if (!this.agent_devices.length) {
-            select.append('<option value="">لا توجد أجهزة متاحة</option>');
+        const escape_html = function (value) {
+            return String(value || "").replace(/[&<>"']/g, function (ch) {
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+                }[ch];
+            });
+        };
+
+        const escape_attr = escape_html;
+
+        let status_box = $("#surhan_agent_device_status");
+        if (!status_box.length) {
+            select.after(
+                '<div id="surhan_agent_device_status" class="text-muted small" style="margin-top:6px; line-height:1.6;"></div>'
+            );
+            status_box = $("#surhan_agent_device_status");
+        }
+
+        const devices = Array.isArray(this.agent_devices) ? this.agent_devices : [];
+
+        const is_hidden_device = function (device) {
+            const name = String(device.name || "");
+            const id = String(device.device_id || "");
+            const status = String(device.status || "");
+            const backend = String(device.backend || "");
+            const text = (name + " " + id + " " + status + " " + backend).toLowerCase();
+
+            if (!name.trim()) {
+                return true;
+            }
+
+            // إخفاء الأجهزة غير المتعلقة بالمسح
+            if (/(touchpad|uefi|fax|keyboard|mouse|monitor|acpi_hal|hid\\)/i.test(text)) {
+                return true;
+            }
+
+            // إخفاء واجهات الطباعة فقط أو التكرارات
+            if (/(printenum|swd\\ipp|printer|print queue|dafwsdprovider)/i.test(text)) {
+                return true;
+            }
+
+            // أي جهاز جاهز فعليًا من WIA
+            if (device.scannable === true || device.scannable === 1 || status.toLowerCase() === "available") {
+                return false;
+            }
+
+            // واجهة ESCL هي واجهة Scan للطابعة متعددة الوظائف
+            if (/swd\\escl/i.test(id)) {
+                return false;
+            }
+
+            // USB scanner ظاهر في Windows
+            if (/^usb\\/i.test(id)) {
+                return false;
+            }
+
+            // أي اسم صريح أنه Scanner أو Multifunction
+            if (/(scanner|scanjet|mfp|multifunction|wia|scan)/i.test(name)) {
+                return false;
+            }
+
+            return true;
+        };
+
+        const filtered = [];
+        const seen = {};
+
+        devices.forEach((device) => {
+            if (is_hidden_device(device)) {
+                return;
+            }
+
+            const name = String(device.name || device.device_id || "Scanner").trim();
+            const key = name.toLowerCase();
+
+            if (seen[key] !== undefined) {
+                const old_index = seen[key];
+                const old_device = filtered[old_index];
+                if (device.scannable && !old_device.scannable) {
+                    filtered[old_index] = device;
+                }
+                return;
+            }
+
+            seen[key] = filtered.length;
+            filtered.push(device);
+        });
+
+        this.agent_devices_filtered = filtered;
+
+        select.append('<option value="" selected="selected">اختر جهاز الاسكانر</option>');
+
+        if (!filtered.length) {
+            status_box.html("لا توجد أجهزة اسكانر متصلة. يرجى توصيل الجهاز وتثبيت التعريفات المناسبة.");
+            select.val("");
             return;
         }
 
-        this.agent_devices.forEach((device) => {
-            const name = device.name || device.device_id || "Scanner";
+        filtered.forEach((device) => {
+            const name = String(device.name || device.device_id || "Scanner").trim();
+            const status = String(device.status || "").toLowerCase();
+            const backend = String(device.backend || "").trim();
+            const scannable = device.scannable === true || device.scannable === 1 || status === "available";
+
+            let label = "متصل - غير جاهز";
+            if (scannable) {
+                label = "متصل وجاهز";
+            } else if (status.indexOf("driver_not_ready") !== -1) {
+                label = "متصل - يحتاج تعريف";
+            } else if (status.indexOf("detected_not_wia") !== -1) {
+                label = "متصل - غير متاح عبر WIA";
+            }
+
+            const option_text = name;
+
             select.append(
-                '<option value="' + this.escape_attr(name) + '">' + this.escape_html(name) + "</option>"
+                '<option value="' + escape_attr(name) + '"' +
+                ' data-scannable="' + (scannable ? "1" : "0") + '"' +
+                ' data-status="' + escape_attr(status) + '"' +
+                ' data-message="' + escape_attr(device.message || "") + '"' +
+                '>' + escape_html(option_text) + "</option>"
             );
         });
 
-        if (preferred_name) {
-            select.val(preferred_name);
-        }
+        // لا تختار أي جهاز تلقائيًا
+        select.val("");
+        select.prop("selectedIndex", 0);
 
-        if (!select.val() && this.agent_devices.length) {
-            select.val(this.agent_devices[0].name || this.agent_devices[0].device_id);
-        }
+        setTimeout(() => {
+            select.val("");
+            select.prop("selectedIndex", 0);
+            select.trigger("change");
+        }, 80);
+
+        const update_status = () => {
+            const opt = select.find("option:selected");
+            const value = select.val();
+
+            if (!value) {
+                status_box.html("اختر جهاز الاسكانر لعرض حالته.");
+                return;
+            }
+
+            const scannable = String(opt.attr("data-scannable") || "0") === "1";
+            const raw_status = String(opt.attr("data-status") || "");
+            const raw_message = String(opt.attr("data-message") || "");
+
+            if (scannable) {
+                status_box.html('<span style="color:#15803d;">● الجهاز متصل وجاهز للمسح.</span>');
+                return;
+            }
+
+            if (raw_status.indexOf("driver_not_ready") !== -1 || raw_message.indexOf("WIA / TWAIN / PaperStream") !== -1) {
+                status_box.html('<span style="color:#b45309;">● الجهاز متصل، لكن يحتاج تثبيت تعريف WIA / TWAIN / PaperStream.</span>');
+                return;
+            }
+
+            status_box.html('<span style="color:#b45309;">● الجهاز متصل، لكنه غير جاهز للمسح.</span>');
+        };
+
+        select.off("change.surhanDeviceStatus").on("change.surhanDeviceStatus", update_status);
+        update_status();
     },
 
     start_agent_scan_from_dialog: function () {
@@ -1053,6 +1200,20 @@ surhan_scanner.manager = {
 
         if (!options.scanner_name) {
             frappe.msgprint("يرجى اختيار جهاز الاسكانر أولاً.");
+            return;
+        }
+
+        const selected_device_option = $("#surhan_agent_device option:selected");
+        if (selected_device_option.length && String(selected_device_option.attr("data-scannable") || "0") === "0") {
+            const status = String(selected_device_option.attr("data-status") || "");
+            const raw_message = String(selected_device_option.attr("data-message") || "");
+
+            if (status.indexOf("driver_not_ready") !== -1 || raw_message.indexOf("WIA / TWAIN / PaperStream") !== -1) {
+                frappe.msgprint("الجهاز متصل، لكنه غير جاهز للمسح. يرجى تثبيت تعريف WIA / TWAIN / PaperStream المناسب ثم إعادة تشغيل Surhan Scanner Agent.");
+                return;
+            }
+
+            frappe.msgprint("الجهاز المحدد متصل، لكنه غير جاهز للمسح.");
             return;
         }
 
@@ -1183,7 +1344,7 @@ surhan_scanner.manager = {
 
         const options = {
             // مسموح تغييره من الديالوق فقط
-            scanner_name: $("#surhan_agent_device").val() || rule.agent_scanner_name || "",
+            scanner_name: $("#surhan_agent_device").val() || "",
             pixel_type: $("#surhan_agent_pixel_type").val() || rule_value("pixel_type", this.get_pixel_type(settings, rule) || "Color"),
             duplex: $("#surhan_agent_duplex").is(":checked") ? 1 : 0,
 
@@ -1265,9 +1426,9 @@ surhan_scanner.manager = {
                 console.log("Surhan Agent Response:", data);
 
                 if (!data || !data.success) {
-                    const msg = data && data.message
-                        ? data.message
-                        : "فشل المسح عبر Surhan Agent";
+                    const msg = this.normalize_agent_error
+                        ? this.normalize_agent_error(data && data.message ? data.message : "فشل المسح عبر Surhan Agent")
+                        : (data && data.message ? data.message : "فشل المسح عبر Surhan Agent");
 
                     this.set_agent_status(msg, "error");
                     this.set_agent_progress(0);
@@ -1305,6 +1466,22 @@ surhan_scanner.manager = {
                     "error"
                 );
             });
+    },
+
+    normalize_agent_error: function (message) {
+        const text = String(message || "");
+
+        if (
+            text.indexOf("WIA / TWAIN / PaperStream") !== -1 ||
+            text.indexOf("powershell failed") !== -1 ||
+            text.indexOf("ParserError") !== -1 ||
+            text.indexOf("Scanner not found") !== -1 ||
+            text.indexOf("driver_not_ready") !== -1
+        ) {
+            return "جهاز الاسكانر غير جاهز للمسح. يرجى التأكد من توصيل الجهاز وتثبيت تعريف WIA / TWAIN / PaperStream المناسب، ثم إعادة تشغيل Surhan Scanner Agent.";
+        }
+
+        return text || "فشل المسح عبر Surhan Agent";
     },
 
     extract_agent_preview_pages: function (data) {
@@ -1767,7 +1944,3 @@ surhan_scanner.manager = {
 })();
 
 
-(function () {
-}, 800);
-    }
-})();
