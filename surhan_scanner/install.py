@@ -76,6 +76,14 @@ def create_default_settings():
             "agent_version_check_url": "/assets/surhan_scanner/agent/version.json",
             "show_agent_install_dialog": 1,
             "max_upload_size_mb": 100,
+            "rate_limit_window_seconds": 300,
+            "create_scan_session_rate_limit": 60,
+            "upload_scan_ip_rate_limit": 1000,
+            "upload_scan_user_rate_limit": 120,
+            "agent_heartbeat_ip_rate_limit": 1000,
+            "agent_update_check_ip_rate_limit": 1000,
+            "agent_update_status_ip_rate_limit": 1000,
+            "attach_lock_timeout_seconds": 8,
         })
         doc.insert(ignore_permissions=True)
         frappe.db.commit()

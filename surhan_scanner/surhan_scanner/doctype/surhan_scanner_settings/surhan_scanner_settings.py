@@ -37,6 +37,15 @@ class SurhanScannerSettings(Document):
         self.upload_retry_delay_seconds = self.upload_retry_delay_seconds or 5
         self.max_scan_batch_pages = self.max_scan_batch_pages or 1000
 
+        self.rate_limit_window_seconds = self.rate_limit_window_seconds or 300
+        self.create_scan_session_rate_limit = self.create_scan_session_rate_limit or 60
+        self.upload_scan_ip_rate_limit = self.upload_scan_ip_rate_limit or 1000
+        self.upload_scan_user_rate_limit = self.upload_scan_user_rate_limit or 120
+        self.agent_heartbeat_ip_rate_limit = self.agent_heartbeat_ip_rate_limit or 1000
+        self.agent_update_check_ip_rate_limit = self.agent_update_check_ip_rate_limit or 1000
+        self.agent_update_status_ip_rate_limit = self.agent_update_status_ip_rate_limit or 1000
+        self.attach_lock_timeout_seconds = self.attach_lock_timeout_seconds or 8
+
         self.agent_allowed_file_types = (
             self.agent_allowed_file_types
             or "pdf,jpg,jpeg,png,tif,tiff"
@@ -51,6 +60,15 @@ class SurhanScannerSettings(Document):
         self._validate_int_range("upload_retry_count", 0, 10)
         self._validate_int_range("upload_retry_delay_seconds", 1, 300)
         self._validate_int_range("max_scan_batch_pages", 1, 1000)
+
+        self._validate_int_range("rate_limit_window_seconds", 60, 3600)
+        self._validate_int_range("create_scan_session_rate_limit", 1, 1000)
+        self._validate_int_range("upload_scan_ip_rate_limit", 1, 10000)
+        self._validate_int_range("upload_scan_user_rate_limit", 1, 1000)
+        self._validate_int_range("agent_heartbeat_ip_rate_limit", 1, 10000)
+        self._validate_int_range("agent_update_check_ip_rate_limit", 1, 10000)
+        self._validate_int_range("agent_update_status_ip_rate_limit", 1, 10000)
+        self._validate_int_range("attach_lock_timeout_seconds", 1, 60)
 
     def normalize_allowed_file_types(self):
         value = self.agent_allowed_file_types or "pdf,jpg,jpeg,png,tif,tiff"

@@ -8,7 +8,7 @@ Surhan Scanner is a Frappe/ERPNext application for workstation-based document sc
 - Deployment mode: Windows Service
 - Installer: SurhanScannerAgentSetup-1.0.0.exe
 - Installer URL: /assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe
-- SHA256: 6792b3644e457ab031c234e3405e9d7d8ad7e22c2ba230a946f14de568c71f1d
+- SHA256: 63a2427c0f4e03749d1399db984e15593d259db7a3ff825dd5109cd570f6ff18
 - Local health endpoint: http://127.0.0.1:8787/health
 
 ## Main Features

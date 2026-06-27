@@ -308,6 +308,67 @@
    "label": "Max Upload Size MB"
   },
   {
+   "fieldname": "rate_limit_section",
+   "fieldtype": "Section Break",
+   "label": "Rate Limit Settings"
+  },
+  {
+   "default": "300",
+   "description": "Rate limit time window in seconds.",
+   "fieldname": "rate_limit_window_seconds",
+   "fieldtype": "Int",
+   "label": "Rate Limit Window Seconds"
+  },
+  {
+   "default": "60",
+   "description": "Maximum scan sessions a user/IP can create within the rate limit window.",
+   "fieldname": "create_scan_session_rate_limit",
+   "fieldtype": "Int",
+   "label": "Create Scan Session Rate Limit"
+  },
+  {
+   "default": "1000",
+   "description": "Maximum scan uploads allowed from the same IP within the rate limit window.",
+   "fieldname": "upload_scan_ip_rate_limit",
+   "fieldtype": "Int",
+   "label": "Upload Scan IP Rate Limit"
+  },
+  {
+   "default": "120",
+   "description": "Maximum scan uploads allowed per user within the rate limit window.",
+   "fieldname": "upload_scan_user_rate_limit",
+   "fieldtype": "Int",
+   "label": "Upload Scan User Rate Limit"
+  },
+  {
+   "default": "1000",
+   "description": "Maximum Agent heartbeat requests allowed from the same IP within the rate limit window.",
+   "fieldname": "agent_heartbeat_ip_rate_limit",
+   "fieldtype": "Int",
+   "label": "Agent Heartbeat IP Rate Limit"
+  },
+  {
+   "default": "1000",
+   "description": "Maximum Agent update manifest checks allowed from the same IP within the rate limit window.",
+   "fieldname": "agent_update_check_ip_rate_limit",
+   "fieldtype": "Int",
+   "label": "Agent Update Check IP Rate Limit"
+  },
+  {
+   "default": "1000",
+   "description": "Maximum Agent update status reports allowed from the same IP within the rate limit window.",
+   "fieldname": "agent_update_status_ip_rate_limit",
+   "fieldtype": "Int",
+   "label": "Agent Update Status IP Rate Limit"
+  },
+  {
+   "default": "8",
+   "description": "Maximum seconds to wait for the attachment save lock.",
+   "fieldname": "attach_lock_timeout_seconds",
+   "fieldtype": "Int",
+   "label": "Attach Lock Timeout Seconds"
+  },
+  {
    "fieldname": "storage_section",
    "fieldtype": "Section Break",
    "label": "Storage"

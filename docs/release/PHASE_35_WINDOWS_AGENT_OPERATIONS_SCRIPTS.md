@@ -52,7 +52,7 @@ What it does:
 
 - Downloads SurhanScannerAgentSetup-1.0.0.exe.
 - Verifies SHA256:
-  6792b3644e457ab031c234e3405e9d7d8ad7e22c2ba230a946f14de568c71f1d
+  63a2427c0f4e03749d1399db984e15593d259db7a3ff825dd5109cd570f6ff18
 - Stops the old service if it exists.
 - Runs the installer silently by default.
 - Runs Configure-SurhanScannerAgent.ps1 after installation if available.

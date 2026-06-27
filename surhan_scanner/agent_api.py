@@ -67,13 +67,13 @@ CHUNK_SIZE = 1024 * 1024
 MAGIC_READ_SIZE = 8192
 
 RATE_LIMIT_WINDOW_SECONDS = 300
-CREATE_SCAN_SESSION_LIMIT = 30
-UPLOAD_SCAN_IP_LIMIT = 60
-UPLOAD_SCAN_USER_LIMIT = 60
-AGENT_HEARTBEAT_IP_LIMIT = 120
+CREATE_SCAN_SESSION_LIMIT = 60
+UPLOAD_SCAN_IP_LIMIT = 1000
+UPLOAD_SCAN_USER_LIMIT = 120
+AGENT_HEARTBEAT_IP_LIMIT = 1000
 
-AGENT_UPDATE_CHECK_IP_LIMIT = 120
-AGENT_UPDATE_STATUS_IP_LIMIT = 120
+AGENT_UPDATE_CHECK_IP_LIMIT = 1000
+AGENT_UPDATE_STATUS_IP_LIMIT = 1000
 AGENT_MANIFEST_FILENAME = "update_manifest.json"
 
 AGENT_OFFLINE_AFTER_SECONDS = 300
@@ -326,18 +326,20 @@ def _rate_limit_response(result):
     )
 
 
+
 def _enforce_create_scan_session_rate_limit():
     """يطبق rate limit على إنشاء جلسات المسح."""
     user = frappe.session.user or "Guest"
     ip_address = _get_request_ip()
 
     identity = "create_scan_session:user:{0}:ip:{1}".format(user, ip_address)
+    rate_limits = _get_rate_limit_settings()
 
     result = _consume_rate_limit(
         action="create_scan_session",
         identity=identity,
-        limit=CREATE_SCAN_SESSION_LIMIT,
-        window_seconds=RATE_LIMIT_WINDOW_SECONDS,
+        limit=rate_limits["create_scan_session_limit"],
+        window_seconds=rate_limits["window_seconds"],
     )
 
     if not result.get("allowed"):
@@ -353,24 +355,26 @@ def _check_upload_ip_rate_limit():
     """يطبق rate limit على رفع الملفات حسب IP."""
     ip_address = _get_request_ip()
     identity = "upload_agent_scan:ip:{0}".format(ip_address)
+    rate_limits = _get_rate_limit_settings()
 
     return _consume_rate_limit(
         action="upload_agent_scan_ip",
         identity=identity,
-        limit=UPLOAD_SCAN_IP_LIMIT,
-        window_seconds=RATE_LIMIT_WINDOW_SECONDS,
+        limit=rate_limits["upload_scan_ip_limit"],
+        window_seconds=rate_limits["window_seconds"],
     )
 
 
 def _check_upload_user_rate_limit(session_user):
     """يطبق rate limit على رفع الملفات حسب المستخدم صاحب الجلسة."""
     identity = "upload_agent_scan:user:{0}".format(session_user or "unknown")
+    rate_limits = _get_rate_limit_settings()
 
     return _consume_rate_limit(
         action="upload_agent_scan_user",
         identity=identity,
-        limit=UPLOAD_SCAN_USER_LIMIT,
-        window_seconds=RATE_LIMIT_WINDOW_SECONDS,
+        limit=rate_limits["upload_scan_user_limit"],
+        window_seconds=rate_limits["window_seconds"],
     )
 
 
@@ -378,31 +382,34 @@ def _check_agent_heartbeat_rate_limit():
     """يطبق rate limit على agent heartbeat حسب IP."""
     ip_address = _get_request_ip()
     identity = "agent_heartbeat:ip:{0}".format(ip_address)
+    rate_limits = _get_rate_limit_settings()
 
     return _consume_rate_limit(
         action="agent_heartbeat_ip",
         identity=identity,
-        limit=AGENT_HEARTBEAT_IP_LIMIT,
-        window_seconds=RATE_LIMIT_WINDOW_SECONDS,
+        limit=rate_limits["agent_heartbeat_ip_limit"],
+        window_seconds=rate_limits["window_seconds"],
     )
 
 
 def _check_agent_update_rate_limit(action_name):
-    """يطبق Rate Limit على طلبات Auto Update حسب IP."""
+    """يطبق rate limit على طلبات تحديث Agent حسب IP."""
     ip_address = _get_request_ip()
     identity = "{0}:ip:{1}".format(action_name, ip_address)
 
-    limit = AGENT_UPDATE_CHECK_IP_LIMIT
     if action_name == "agent_update_status":
-        limit = AGENT_UPDATE_STATUS_IP_LIMIT
+        limit_key = "agent_update_status_ip_limit"
+    else:
+        limit_key = "agent_update_check_ip_limit"
+
+    rate_limits = _get_rate_limit_settings()
 
     return _consume_rate_limit(
         action=action_name,
         identity=identity,
-        limit=limit,
-        window_seconds=RATE_LIMIT_WINDOW_SECONDS,
+        limit=rate_limits[limit_key],
+        window_seconds=rate_limits["window_seconds"],
     )
-
 
 def _get_settings():
     """يجلب إعدادات Surhan Scanner."""
@@ -441,6 +448,53 @@ def _get_check_value(doc, fieldname, default=0):
     except Exception:
         value = default
     return 1 if value else 0
+
+
+def _get_bounded_int_setting(settings, fieldname, default, minimum, maximum):
+    """Read an integer setting with safe fallback bounds."""
+    value = _get_int_value(settings, fieldname, default)
+
+    if value < minimum or value > maximum:
+        return default
+
+    return value
+
+
+def _get_rate_limit_settings(settings=None):
+    """Read rate-limit settings from Surhan Scanner Settings with safe defaults."""
+    settings = settings or _get_settings()
+
+    return {
+        "window_seconds": _get_bounded_int_setting(
+            settings, "rate_limit_window_seconds", RATE_LIMIT_WINDOW_SECONDS, 60, 3600
+        ),
+        "create_scan_session_limit": _get_bounded_int_setting(
+            settings, "create_scan_session_rate_limit", CREATE_SCAN_SESSION_LIMIT, 1, 1000
+        ),
+        "upload_scan_ip_limit": _get_bounded_int_setting(
+            settings, "upload_scan_ip_rate_limit", UPLOAD_SCAN_IP_LIMIT, 1, 10000
+        ),
+        "upload_scan_user_limit": _get_bounded_int_setting(
+            settings, "upload_scan_user_rate_limit", UPLOAD_SCAN_USER_LIMIT, 1, 1000
+        ),
+        "agent_heartbeat_ip_limit": _get_bounded_int_setting(
+            settings, "agent_heartbeat_ip_rate_limit", AGENT_HEARTBEAT_IP_LIMIT, 1, 10000
+        ),
+        "agent_update_check_ip_limit": _get_bounded_int_setting(
+            settings, "agent_update_check_ip_rate_limit", AGENT_UPDATE_CHECK_IP_LIMIT, 1, 10000
+        ),
+        "agent_update_status_ip_limit": _get_bounded_int_setting(
+            settings, "agent_update_status_ip_rate_limit", AGENT_UPDATE_STATUS_IP_LIMIT, 1, 10000
+        ),
+    }
+
+
+def _get_attach_lock_timeout_seconds(settings=None):
+    """Read attachment lock wait timeout from settings with safe bounds."""
+    settings = settings or _get_settings()
+    return _get_bounded_int_setting(
+        settings, "attach_lock_timeout_seconds", 8, 1, 60
+    )
 
 
 def _split_allowed_file_types(value):
@@ -1171,6 +1225,88 @@ def _upsert_agent_device(
     return doc
 
 
+def _normalize_agent_binding_value(value, max_length=140):
+    """Normalize Agent identity values used for scan-token binding."""
+    return _safe_agent_text(value, max_length).strip()
+
+
+def _make_scan_session_agent_binding(agent_id=None, machine_name=None, windows_user=None):
+    """Build normalized Agent identity values for binding a scan_token to one Agent."""
+    binding = {}
+
+    if agent_id:
+        binding["agent_id"] = _normalize_agent_binding_value(
+            _make_agent_id(agent_id=agent_id),
+            140,
+        )
+
+    if machine_name:
+        binding["agent_machine_name"] = _normalize_agent_binding_value(
+            machine_name,
+            140,
+        )
+
+    if windows_user:
+        binding["agent_windows_user"] = _normalize_agent_binding_value(
+            windows_user,
+            140,
+        )
+
+    return {key: value for key, value in binding.items() if value}
+
+
+def _validate_scan_session_agent_binding(
+    scan_token,
+    session_data,
+    agent_id=None,
+    machine_name=None,
+    windows_user=None,
+):
+    """
+    Bind a scan_token to the first Agent identity that uses it.
+
+    This prevents the same scan_token from being reused by a different Agent
+    identity for heartbeat, update manifest checks, or update status reports.
+    """
+    if not scan_token or not session_data:
+        return True, ""
+
+    incoming = _make_scan_session_agent_binding(
+        agent_id=agent_id,
+        machine_name=machine_name,
+        windows_user=windows_user,
+    )
+
+    if not incoming:
+        return True, ""
+
+    remaining_seconds = _get_scan_token_remaining_seconds(session_data)
+    if remaining_seconds <= 0:
+        return False, "Invalid or expired scan token"
+
+    for key, incoming_value in incoming.items():
+        existing_value = _normalize_agent_binding_value(session_data.get(key), 140)
+
+        if (
+            existing_value
+            and incoming_value
+            and existing_value.casefold() != incoming_value.casefold()
+        ):
+            _cache_delete(scan_token)
+            return False, "Scan token is already bound to a different Agent device"
+
+    changed = False
+    for key, incoming_value in incoming.items():
+        if incoming_value and not session_data.get(key):
+            session_data[key] = incoming_value
+            changed = True
+
+    if changed:
+        _cache_set(scan_token, session_data, remaining_seconds)
+
+    return True, ""
+
+
 def _update_scan_session_agent_info(scan_token, session_data, agent_info):
     """يحدث بيانات جلسة المسح بمعلومات Agent."""
     if not scan_token or not session_data:
@@ -1674,6 +1810,17 @@ def get_agent_update_manifest(
             return _response(403, False, "Scan session user does not have a Surhan Scanner role")
 
         frappe.set_user(session_user)
+
+        bind_ok, bind_message = _validate_scan_session_agent_binding(
+            scan_token=scan_token,
+            session_data=session_data,
+            agent_id=agent_id,
+            machine_name=machine_name,
+            windows_user=windows_user,
+        )
+        if not bind_ok:
+            return _response(403, False, bind_message)
+
         authenticated_for_device_update = True
 
     elif frappe.session.user and frappe.session.user != "Guest":
@@ -1790,6 +1937,14 @@ def report_agent_update_status(
 
         frappe.set_user(session_user)
 
+        bind_ok, bind_message = _validate_scan_session_agent_binding(
+            scan_token=scan_token,
+            session_data=session_data,
+            agent_id=agent_id,
+        )
+        if not bind_ok:
+            return _response(403, False, bind_message)
+
     else:
         if frappe.session.user == "Guest":
             return _response(403, False, "scan_token is required for guest update status")
@@ -1860,6 +2015,16 @@ def agent_heartbeat(
             return _response(403, False, "Scan session user does not have a Surhan Scanner role")
 
         frappe.set_user(session_user)
+
+        bind_ok, bind_message = _validate_scan_session_agent_binding(
+            scan_token=scan_token,
+            session_data=session_data,
+            agent_id=agent_id,
+            machine_name=machine_name,
+            windows_user=windows_user,
+        )
+        if not bind_ok:
+            return _response(403, False, bind_message)
 
     else:
         if frappe.session.user == "Guest":
@@ -2537,71 +2702,142 @@ def _set_child_table_scan_defaults(row, child_meta, file_url, file_name=None):
             row.set(fieldname, now_datetime().date())
 
 
+def _make_attach_lock_key(doctype, docname, attach_field):
+    """Build a short DB named-lock key for serializing attachment updates."""
+    import hashlib as _hashlib
+
+    site = getattr(frappe.local, "site", "") or ""
+    raw = "{0}:{1}:{2}:{3}".format(
+        site,
+        doctype or "",
+        docname or "",
+        attach_field or "",
+    )
+    return "surhan_scan_attach_" + _hashlib.sha1(raw.encode("utf-8")).hexdigest()
+
+
+def _acquire_attach_lock(doctype, docname, attach_field, timeout_seconds=8):
+    """
+    Acquire a short database named lock while appending/updating attachment fields.
+
+    This does not block creating scan sessions. It only serializes the critical
+    save operation for the same doctype/docname/attach_field.
+    """
+    lock_key = _make_attach_lock_key(doctype, docname, attach_field)
+
+    try:
+        result = frappe.db.sql(
+            "SELECT GET_LOCK(%s, %s)",
+            (lock_key, cint(timeout_seconds or 8)),
+            as_list=True,
+        )
+        acquired = bool(result and result[0] and cint(result[0][0]) == 1)
+        return acquired, lock_key
+    except Exception:
+        frappe.log_error(
+            frappe.get_traceback(),
+            "Surhan Scanner Attach Lock Acquire Failed",
+        )
+        # Fail-open to avoid breaking uploads if DB named locks are unavailable.
+        return True, ""
+
+
+def _release_attach_lock(lock_key):
+    """Release a database named lock if it was acquired."""
+    if not lock_key:
+        return
+
+    try:
+        frappe.db.sql("SELECT RELEASE_LOCK(%s)", (lock_key,))
+    except Exception:
+        frappe.log_error(
+            frappe.get_traceback(),
+            "Surhan Scanner Attach Lock Release Failed",
+        )
+
+
 def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, file_name=None, max_retries=3):
     """Attach uploaded scan to a direct Attach field or append a child-table row."""
     if not doctype or not docname or not attach_field or not file_url:
         return True, ""
 
+    lock_key = ""
+
     try:
         target = _resolve_attach_target(doctype, attach_field)
 
-        if target.get("mode") == "direct":
-            ok = _safe_update_target_attach_field(
-                doctype=doctype,
-                docname=docname,
-                attach_field=target.get("attach_field"),
-                file_url=file_url,
-                max_retries=max_retries,
-            )
-            return ok, "" if ok else "Could not update attach field"
-
-        if target.get("mode") != "child_table":
-            return False, "Unsupported attach target"
-
-        table_field = target.get("table_field")
-        child_doctype = target.get("child_doctype")
-        child_attach_field = target.get("child_attach_field")
-        child_meta = frappe.get_meta(child_doctype)
-
-        last_error = None
-
-        for attempt in range(1, max_retries + 1):
-            try:
-                doc = frappe.get_doc(doctype, docname)
-                doc.check_permission("write")
-
-                row = doc.append(table_field, {})
-                row.set(child_attach_field, file_url)
-                _set_child_table_scan_defaults(
-                    row=row,
-                    child_meta=child_meta,
-                    file_url=file_url,
-                    file_name=file_name,
-                )
-
-                doc.save(ignore_permissions=False)
-                return True, ""
-
-            except Exception as exc:
-                last_error = exc
-                frappe.db.rollback()
-
-                if attempt < max_retries:
-                    time.sleep(0.2 * attempt)
-                    continue
-
-        frappe.log_error(
-            title="Surhan Scanner Child Table Attach Failed",
-            message=(
-                f"doctype={doctype}, docname={docname}, table_field={table_field}, "
-                f"child_attach_field={child_attach_field}, file_url={file_url}, error={last_error}"
-            ),
+        lock_acquired, lock_key = _acquire_attach_lock(
+            doctype=doctype,
+            docname=docname,
+            attach_field=attach_field,
+            timeout_seconds=_get_attach_lock_timeout_seconds(),
         )
-        return False, str(last_error)
+
+        if not lock_acquired:
+            return False, "Another scan upload is currently being attached to this document. Please try again in a few seconds."
+
+        try:
+            if target.get("mode") == "direct":
+                ok = _safe_update_target_attach_field(
+                    doctype=doctype,
+                    docname=docname,
+                    attach_field=target.get("attach_field"),
+                    file_url=file_url,
+                    max_retries=max_retries,
+                )
+                return ok, "" if ok else "Could not update attach field"
+
+            if target.get("mode") != "child_table":
+                return False, "Unsupported attach target"
+
+            table_field = target.get("table_field")
+            child_doctype = target.get("child_doctype")
+            child_attach_field = target.get("child_attach_field")
+            child_meta = frappe.get_meta(child_doctype)
+
+            last_error = None
+
+            for attempt in range(1, max_retries + 1):
+                try:
+                    doc = frappe.get_doc(doctype, docname)
+                    doc.check_permission("write")
+
+                    row = doc.append(table_field, {})
+                    row.set(child_attach_field, file_url)
+                    _set_child_table_scan_defaults(
+                        row=row,
+                        child_meta=child_meta,
+                        file_url=file_url,
+                        file_name=file_name,
+                    )
+
+                    doc.save(ignore_permissions=False)
+                    return True, ""
+
+                except Exception as exc:
+                    last_error = exc
+                    frappe.db.rollback()
+
+                    if attempt < max_retries:
+                        time.sleep(0.2 * attempt)
+                        continue
+
+            frappe.log_error(
+                title="Surhan Scanner Child Table Attach Failed",
+                message=(
+                    f"doctype={doctype}, docname={docname}, table_field={table_field}, "
+                    f"child_attach_field={child_attach_field}, file_url={file_url}, error={last_error}"
+                ),
+            )
+            return False, str(last_error)
+
+        finally:
+            _release_attach_lock(lock_key)
 
     except Exception as exc:
         frappe.log_error(frappe.get_traceback(), "Surhan Scanner Attach Routing Failed")
         return False, str(exc)
+
 
 @frappe.whitelist(allow_guest=True)
 def upload_agent_scan(scan_token=None, filename=None, file_content=None):

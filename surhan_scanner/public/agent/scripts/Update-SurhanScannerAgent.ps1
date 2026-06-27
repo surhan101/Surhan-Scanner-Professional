@@ -11,7 +11,7 @@ param(
 
     [string]$InstallerPath = "$env:TEMP\SurhanScannerAgentSetup-1.0.0.exe",
 
-    [string]$ExpectedSha256 = "6792b3644e457ab031c234e3405e9d7d8ad7e22c2ba230a946f14de568c71f1d",
+    [string]$ExpectedSha256 = "63a2427c0f4e03749d1399db984e15593d259db7a3ff825dd5109cd570f6ff18",
 
     [string]$ServiceName = "SurhanScannerAgent",
 
