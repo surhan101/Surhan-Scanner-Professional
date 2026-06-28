@@ -1,0 +1,6 @@
+{
+  "version": "1.0.0",
+  "edition": "Enterprise",
+  "installer": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe",
+  "exe": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent.exe"
+}
