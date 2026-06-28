@@ -9,7 +9,7 @@ param(
 
     [string]$InstallerUrl = "",
 
-    [string]$InstallerPath = "$env:TEMP\SurhanScannerAgentSetup-1.0.0.exe",
+    [string]$InstallerPath = "$env:TEMP\SurhanScannerAgentSetup-1.0.1.exe",
 
     [string]$ExpectedSha256 = "63a2427c0f4e03749d1399db984e15593d259db7a3ff825dd5109cd570f6ff18",
 
@@ -55,7 +55,7 @@ Assert-Administrator
 $origin = Normalize-Origin -Url $FarabiUrl
 
 if ([string]::IsNullOrWhiteSpace($InstallerUrl)) {
-    $InstallerUrl = "$origin/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe"
+    $InstallerUrl = "$origin/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe"
 } elseif ($InstallerUrl.StartsWith("/")) {
     $InstallerUrl = "$origin$InstallerUrl"
 }

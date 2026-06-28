@@ -1,1 +1,1 @@
-63a2427c0f4e03749d1399db984e15593d259db7a3ff825dd5109cd570f6ff18  releases/SurhanScannerAgentSetup-1.0.0.exe
+c505a6d879edc9c91a4a0e49b9a85914dee6c86faaace5463dfade592a5731bf  releases/SurhanScannerAgentSetup-1.0.1.exe

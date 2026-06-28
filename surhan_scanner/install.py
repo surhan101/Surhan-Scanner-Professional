@@ -69,7 +69,7 @@ def create_default_settings():
             "agent_scan_timeout_seconds": 120,
             "agent_max_file_size_mb": 100,
             "agent_allowed_file_types": "pdf,jpg,jpeg,png,tif,tiff",
-            "agent_download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.0.exe",
+            "agent_download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe",
             "agent_latest_version": "1.0.0",
             "farabi_base_url": "",
             "agent_allowed_farabi_origins": "",
