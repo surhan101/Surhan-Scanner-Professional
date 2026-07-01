@@ -2,7 +2,7 @@ Surhan Scanner Agent Enterprise
 
 حزمة التثبيت المعتمدة حاليًا:
 
-SurhanScannerAgentSetup-1.0.1.exe
+SurhanScannerAgentSetup-1.0.2.exe
 
 نوع الحزمة:
 
@@ -22,7 +22,7 @@ Surhan Scanner Agent
 
 طريقة التثبيت:
 
-1. قم بتنزيل ملف SurhanScannerAgentSetup-1.0.1.exe.
+1. قم بتنزيل ملف SurhanScannerAgentSetup-1.0.2.exe.
 2. شغل الملف كمسؤول Administrator.
 3. وافق على نافذة الصلاحيات UAC إذا ظهرت.
 4. سيقوم المثبت بتثبيت البرنامج داخل:

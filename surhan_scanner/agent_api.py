@@ -2652,8 +2652,80 @@ def _safe_update_target_fields(doctype, docname, updates, max_retries=3):
     return False
 
 
-def _set_child_table_scan_defaults(row, child_meta, file_url, file_name=None):
+
+# SURHAN_PAGE_COUNT_PATCH_102
+def _count_pdf_pages_from_file_url(file_url):
+    """Return the real PDF page count for a Frappe File URL. Fallback to 1."""
+    try:
+        import os
+        import re
+
+        if not file_url:
+            return 1
+
+        clean_url = str(file_url).split("?", 1)[0]
+        basename = os.path.basename(clean_url)
+
+        candidates = []
+
+        if clean_url.startswith("/private/files/"):
+            candidates.append(frappe.get_site_path("private", "files", basename))
+        elif clean_url.startswith("/files/"):
+            candidates.append(frappe.get_site_path("public", "files", basename))
+
+        try:
+            file_doc = frappe.db.get_value(
+                "File",
+                {"file_url": file_url},
+                ["file_name", "is_private"],
+                as_dict=True,
+            )
+
+            if file_doc and file_doc.get("file_name"):
+                if cint(file_doc.get("is_private")):
+                    candidates.append(
+                        frappe.get_site_path("private", "files", file_doc.get("file_name"))
+                    )
+                else:
+                    candidates.append(
+                        frappe.get_site_path("public", "files", file_doc.get("file_name"))
+                    )
+        except Exception:
+            pass
+
+        for candidate in candidates:
+            if not candidate or not os.path.exists(candidate):
+                continue
+
+            if not str(candidate).lower().endswith(".pdf"):
+                return 1
+
+            with open(candidate, "rb") as f:
+                data = f.read()
+
+            pages = len(re.findall(rb"/Type\s*/Page\b", data))
+            if pages > 0:
+                return pages
+
+        return 1
+
+    except Exception as exc:
+        try:
+            frappe.log_error(
+                title="Surhan Scanner PDF Page Count Failed",
+                message=f"file_url={file_url}, error={exc}",
+            )
+        except Exception:
+            pass
+        return 1
+
+
+def _set_child_table_scan_defaults(row, child_meta, file_url, file_name=None, page_count=None):
     """Fill common required/default fields in child attachment rows."""
+    page_count = cint(page_count or 1)
+    if page_count <= 0:
+        page_count = 1
+
     for child_df in child_meta.fields:
         fieldname = child_df.fieldname
         if not fieldname or row.get(fieldname):
@@ -2663,7 +2735,7 @@ def _set_child_table_scan_defaults(row, child_meta, file_url, file_name=None):
             continue
 
         if fieldname in ["attachment_count", "count", "qty", "quantity"]:
-            row.set(fieldname, 1)
+            row.set(fieldname, page_count)
             continue
 
         if fieldname in ["attachment_description", "description", "remarks"]:
@@ -2804,11 +2876,14 @@ def _safe_attach_file_to_target_field(doctype, docname, attach_field, file_url, 
 
                     row = doc.append(table_field, {})
                     row.set(child_attach_field, file_url)
+                    page_count = _count_pdf_pages_from_file_url(file_url)
+
                     _set_child_table_scan_defaults(
                         row=row,
                         child_meta=child_meta,
                         file_url=file_url,
                         file_name=file_name,
+                        page_count=page_count,
                     )
 
                     doc.save(ignore_permissions=False)

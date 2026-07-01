@@ -18,8 +18,8 @@ import frappe
 DOCTYPE = "Surhan Scanner Settings"
 
 FORCED_DEFAULTS = {
-    "agent_download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe",
-    "agent_latest_version": "1.0.0",
+    "agent_download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe",
+    "agent_latest_version": "1.0.2",
     "agent_version_check_url": "/assets/surhan_scanner/agent/version.json",
     "agent_install_mode": "Windows Service",
     "agent_install_path": r"C:\Program Files\SurhanScannerAgent",

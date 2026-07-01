@@ -4,7 +4,7 @@
 
 The active production package for Surhan Scanner Agent is:
 
-SurhanScannerAgentSetup-1.0.1.exe
+SurhanScannerAgentSetup-1.0.2.exe
 
 ## Version
 
@@ -20,8 +20,8 @@ windows_service_installer
 
 ## Package Details
 
-- package_filename: SurhanScannerAgentSetup-1.0.1.exe
-- package_url: /assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe
+- package_filename: SurhanScannerAgentSetup-1.0.2.exe
+- package_url: /assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe
 - package_sha256: 63a2427c0f4e03749d1399db984e15593d259db7a3ff825dd5109cd570f6ff18
 - package_size_bytes: 4433369
 - archive_format: exe
@@ -51,11 +51,11 @@ The installer configures Windows Service recovery so the service restarts automa
 
 The active update_manifest.json must point to:
 
-SurhanScannerAgentSetup-1.0.1.exe
+SurhanScannerAgentSetup-1.0.2.exe
 
 The active version.json must point to:
 
-/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe
+/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe
 
 ## Previous Rollback Packages
 

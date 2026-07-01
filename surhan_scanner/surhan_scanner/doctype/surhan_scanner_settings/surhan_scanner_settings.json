@@ -191,7 +191,7 @@
    "label": "Enable Agent Health Check"
   },
   {
-   "default": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe",
+   "default": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe",
    "fieldname": "agent_download_url",
    "fieldtype": "Data",
    "label": "Agent Download URL"

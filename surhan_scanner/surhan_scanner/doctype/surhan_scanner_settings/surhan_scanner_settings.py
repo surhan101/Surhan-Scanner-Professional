@@ -17,9 +17,9 @@ class SurhanScannerSettings(Document):
         self.agent_url = self.agent_url or "http://127.0.0.1:8787"
         self.agent_download_url = (
             self.agent_download_url
-            or "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe"
+            or "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe"
         )
-        self.agent_latest_version = self.agent_latest_version or "1.0.0"
+        self.agent_latest_version = self.agent_latest_version or "1.0.2"
         self.farabi_base_url = (self.farabi_base_url or "").strip()
         self.agent_allowed_farabi_origins = (self.agent_allowed_farabi_origins or "").strip()
         self.agent_version_check_url = (

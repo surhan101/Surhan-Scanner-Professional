@@ -152,7 +152,7 @@ Ensure-ObjectProperty -Object $config.server -Name "cors_note" -Value "Configure
 Ensure-ObjectProperty -Object $config.enterprise -Name "deployment_mode" -Value "windows_service"
 Ensure-ObjectProperty -Object $config.enterprise -Name "silent_install_supported" -Value $true
 Ensure-ObjectProperty -Object $config.enterprise -Name "auto_upgrade_supported" -Value $true
-Ensure-ObjectProperty -Object $config.enterprise -Name "required_agent_version" -Value "1.0.0"
+Ensure-ObjectProperty -Object $config.enterprise -Name "required_agent_version" -Value "1.0.2"
 Ensure-ObjectProperty -Object $config.enterprise -Name "compatible_agent_versions" -Value @("1.0.0")
 
 Ensure-ObjectProperty -Object $config.paths -Name "program_data_dir" -Value "$env:ProgramData\SurhanScannerAgent"

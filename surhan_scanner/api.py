@@ -316,7 +316,7 @@ def _get_scanner_config(doctype=None):
             "agent_download_url": _get_value(
                 settings,
                 "agent_download_url",
-                "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe"
+                "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe"
             ),
             "agent_latest_version": _get_value(
                 settings,

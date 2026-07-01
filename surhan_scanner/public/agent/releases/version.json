@@ -1,6 +1,13 @@
 {
-  "version": "1.0.1",
-  "edition": "Enterprise",
-  "installer": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe",
-  "exe": "/assets/surhan_scanner/agent/releases/SurhanScannerAgent.exe"
+  "success": true,
+  "version": "1.0.2",
+  "agent_version": "1.0.2",
+  "latest_version": "1.0.2",
+  "required_agent_version": "1.0.2",
+  "minimum_agent_version": "1.0.2",
+  "installer_filename": "SurhanScannerAgentSetup-1.0.2.exe",
+  "download_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe",
+  "installer_url": "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe",
+  "sha256": "041c6a25e8fbb6fb4573f56410e11e5052aaf61997117e89887738f06ebd25c5",
+  "notes": "Scanner Agent 1.0.2 with TWAIN Bridge, PaperStream support, automatic device resolver, duplex support, PDF page count attachment update, WIA retained, eSCL prepared."
 }

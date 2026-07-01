@@ -46,7 +46,7 @@
   "enterprise": {
     "deployment_mode": "windows_service",
     "minimum_farabi_app_version": "1.0.0",
-    "required_agent_version": "1.0.0",
+    "required_agent_version": "1.0.2",
     "compatible_agent_versions": [
       "1.0.0"
     ],

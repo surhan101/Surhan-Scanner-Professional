@@ -1656,7 +1656,7 @@ surhan_scanner.manager = {
 
         const download_url = this.get_absolute_url(
             settings.agent_download_url ||
-            "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.1.exe"
+            "/assets/surhan_scanner/agent/releases/SurhanScannerAgentSetup-1.0.2.exe"
         );
 
         const version_url = this.get_absolute_url(
@@ -1664,7 +1664,7 @@ surhan_scanner.manager = {
             "/assets/surhan_scanner/agent/version.json"
         );
 
-        const latest_version = settings.agent_latest_version || "1.0.0";
+        const latest_version = settings.agent_latest_version || "1.0.2";
 
         const html =
             '<div style="line-height:1.9;">' +
@@ -1944,3 +1944,66 @@ surhan_scanner.manager = {
 })();
 
 
+
+// SURHAN_UI_BRANDING_PATCH_102
+(function () {
+    function replaceTextNodes(root) {
+        try {
+            const walker = document.createTreeWalker(root || document.body, NodeFilter.SHOW_TEXT);
+            const replacements = [
+                [/تحميل Surhan Scanner Agent/g, "تحميل برنامج الماسح"],
+                [/Surhan Scanner Agent/g, "برنامج الماسح المحلي"],
+                [/Surhan Agent/g, "Agent"],
+                [/Surhan Scanner Professional/g, "Scanner Professional"],
+                [/Latest Version/g, "آخر إصدار"]
+            ];
+
+            let node;
+            while ((node = walker.nextNode())) {
+                let value = node.nodeValue || "";
+                let next = value;
+                replacements.forEach(function (pair) {
+                    next = next.replace(pair[0], pair[1]);
+                });
+                if (next !== value) {
+                    node.nodeValue = next;
+                }
+            }
+        } catch (e) {}
+    }
+
+    function hideVersionButtons() {
+        try {
+            document.querySelectorAll("button, a").forEach(function (el) {
+                const text = (el.textContent || "").trim();
+                if (
+                    text === "معلومات النسخة" ||
+                    text === "Version Details" ||
+                    text === "تفاصيل النسخة"
+                ) {
+                    el.style.display = "none";
+                }
+            });
+        } catch (e) {}
+    }
+
+    function applyPatch() {
+        replaceTextNodes(document.body);
+        hideVersionButtons();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", applyPatch);
+    } else {
+        applyPatch();
+    }
+
+    try {
+        const observer = new MutationObserver(function () {
+            applyPatch();
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+    } catch (e) {}
+
+    setInterval(applyPatch, 1500);
+})();
